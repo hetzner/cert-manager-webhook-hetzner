@@ -1,0 +1,6 @@
+{
+  "tokenSecretKeyRef": {
+    "name": "hetzner",
+    "key": "token"
+  }
+}

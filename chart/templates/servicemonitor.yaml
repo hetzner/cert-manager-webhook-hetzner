@@ -1,0 +1,20 @@
+{{- if .Values.metrics.serviceMonitor.enabled }}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ include "cert-manager-webhook-hetzner.fullname" . }}
+  namespace: {{ .Release.Namespace | quote }}
+  labels:
+    app: {{ include "cert-manager-webhook-hetzner.name" . }}
+    chart: {{ include "cert-manager-webhook-hetzner.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ include "cert-manager-webhook-hetzner.name" . }}
+      release: {{ .Release.Name }}
+  endpoints:
+    - port: metrics
+      path: /metrics
+{{- end }}

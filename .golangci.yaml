@@ -1,0 +1,95 @@
+version: "2"
+
+run:
+  timeout: 5m
+  build-tags:
+    - e2e
+
+linters:
+  enable:
+    - asasalint
+    - asciicheck
+    - bidichk
+    - bodyclose
+    - contextcheck
+    - copyloopvar
+    - durationcheck
+    - errcheck
+    - errchkjson
+    - errname
+    - errorlint
+    - exhaustive
+    - forbidigo
+    - gocheckcompilerdirectives
+    - gochecksumtype
+    - gocritic
+    - godot
+    - gomoddirectives
+    - gomodguard
+    - gosec
+    - gosmopolitan
+    - govet
+    - importas
+    - ineffassign
+    - loggercheck
+    - makezero
+    - misspell
+    - musttag
+    - nilerr
+    - nilnesserr
+    - noctx
+    - prealloc
+    - protogetter
+    - reassign
+    - recvcheck
+    - revive
+    - rowserrcheck
+    - spancheck
+    - staticcheck
+    - testifylint
+    - unparam
+    - unused
+    - whitespace
+    - zerologlint
+
+  settings:
+    exhaustive:
+      default-signifies-exhaustive: true
+
+    staticcheck:
+      checks: ["all", "-QF1008"]
+
+    gomoddirectives:
+      replace-allow-list:
+        - github.com/hetznercloud/hcloud-go/v2
+
+  exclusions:
+    generated: lax
+    presets:
+      - comments
+      - common-false-positives
+      - std-error-handling
+    rules:
+      - linters:
+          - errcheck
+          - gosec
+          - noctx
+        path: _test\.go
+      - linters:
+          - testifylint
+        text: require-error
+
+formatters:
+  enable:
+    - gci
+    - goimports
+
+  settings:
+    gci:
+      sections:
+        - standard
+        - default
+        - prefix(github.com/hetzner)
+
+  exclusions:
+    generated: lax

@@ -1,0 +1,10 @@
+builds:
+  - id: main
+    dir: .
+    main: ./main.go
+    env:
+      - CGO_ENABLED=0
+    ldflags:
+      - -s
+      - -w
+      - -X github.com/hetzner/cert-manager-webhook-hetzner/internal/version.versionPrerelease={{ if not (index .Env "CI_COMMIT_TAG") }}dev+{{ .Git.ShortCommit }}{{ end }}

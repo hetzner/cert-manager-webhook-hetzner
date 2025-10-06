@@ -1,0 +1,75 @@
+---
+# See https://pre-commit.com for more information
+# See https://pre-commit.com/hooks.html for more hooks
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: check-added-large-files
+      - id: check-case-conflict
+      - id: check-executables-have-shebangs
+      - id: check-shebang-scripts-are-executable
+      - id: check-symlinks
+      - id: destroyed-symlinks
+
+      - id: check-json
+      - id: check-yaml
+        args: [--allow-multiple-documents, --unsafe]
+        exclude: ^chart/templates/.*$
+      - id: check-toml
+
+      - id: check-merge-conflict
+      - id: end-of-file-fixer
+        exclude: ^chart/README\.md$
+      - id: mixed-line-ending
+        args: [--fix=lf]
+      - id: trailing-whitespace
+
+  - repo: local
+    hooks:
+      - id: update-helm-snapshots
+        name: update-helm-snapshots
+        description: Update Helm snapshots
+        language: system
+        entry: make -C chart snapshots
+        pass_filenames: false
+        always_run: true
+
+  - repo: local
+    hooks:
+      - id: update-helm-docs
+        name: update-helm-docs
+        description: Update Helm docs
+        language: golang
+        additional_dependencies:
+          - github.com/norwoodj/helm-docs/cmd/helm-docs@v1.14.2
+        entry: helm-docs
+        pass_filenames: false
+        always_run: true
+
+  - repo: https://github.com/pre-commit/mirrors-prettier
+    rev: v3.1.0
+    hooks:
+      - id: prettier
+        files: \.(md|ya?ml|json)$
+        exclude: ^(chart/templates/.*|chart/README\.md)$
+
+  - repo: local
+    hooks:
+      - id: shfmt
+        name: shfmt
+        description: Format shell scripts with shfmt
+        language: golang
+        additional_dependencies: [mvdan.cc/sh/v3/cmd/shfmt@v3.11.0]
+        entry: shfmt -i 2 -ci -sr -kp -w
+        types: [shell]
+
+  - repo: https://github.com/shellcheck-py/shellcheck-py
+    rev: v0.10.0.1
+    hooks:
+      - id: shellcheck
+
+  - repo: https://github.com/golangci/golangci-lint
+    rev: v2.5.0
+    hooks:
+      - id: golangci-lint-full

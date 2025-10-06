@@ -1,0 +1,37 @@
+name: Test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    permissions:
+      id-token: write
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-go@v6
+        with:
+          go-version-file: go.mod
+
+      - uses: hetznercloud/tps-action@main
+
+      - name: Install test tools
+        run: |
+          go install sigs.k8s.io/controller-runtime/tools/setup-envtest@latest
+
+      - name: Run tests
+        run: make test-coverage
+
+      - name: upload coverage reports to codecov
+        if: >
+          !startswith(github.head_ref, 'renovate/') &&
+          !startswith(github.head_ref, 'releaser-pleaser--')
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.codecov_token }}

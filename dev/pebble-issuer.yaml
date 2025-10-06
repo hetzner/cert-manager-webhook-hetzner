@@ -1,0 +1,20 @@
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: pebble-issuer
+spec:
+  acme:
+    skipTLSVerify: true
+    email: example@example.com
+    server: https://pebble.cert-manager.svc:14000/dir
+    privateKeySecretRef:
+      name: pk-pebble-issuer
+    solvers:
+      - dns01:
+          webhook:
+            groupName: my-hetzner-project
+            solverName: hetzner
+            config:
+              tokenSecretKeyRef:
+                name: hcloud
+                key: token

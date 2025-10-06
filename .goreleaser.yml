@@ -1,0 +1,65 @@
+# Visit https://goreleaser.com for documentation on how to customize this
+# behavior.
+---
+version: 2
+
+before:
+  hooks:
+    - make helm-package VERSION={{ .Version }}
+
+builds:
+  - id: binary
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+    goarch:
+      - amd64
+      - arm64
+    binary: cert-manager-webhook-hetzner
+    ldflags:
+      - -s
+      - -w
+      - -X {{ .ModulePath }}/internal/version.version=v{{ .Version }}
+      - -X {{ .ModulePath }}/internal/version.versionPrerelease={{- if .IsSnapshot -}}dev+{{ .ShortCommit }}{{- end -}}
+
+kos:
+  - id: container-image
+    build: binary
+    repositories:
+      - hetznercloud/cert-manager-webhook-hetzner
+    platforms:
+      - linux/amd64
+      - linux/arm64
+    base_image: alpine
+    bare: true
+    labels:
+      org.opencontainers.image.source: https://github.com/hetzner/cert-manager-webhook-hetzner
+    tags:
+      - "{{.Tag}}"
+
+archives:
+  - id: archive
+    ids:
+      - binary
+    name_template: "{{ .Binary }}-{{ .Os }}-{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}"
+    files:
+      - LICENSE
+      - README.md
+
+release:
+  ids:
+    - archive
+  extra_files:
+    - glob: ./cert-manager-webhook-hetzner-*.tgz
+
+publishers:
+  - name: publish-helm-chart
+
+    # Only execute once by filtering all ids, and only running for the checksum.
+    ids: ["none"]
+    checksum: true
+
+    cmd: ./scripts/publish-helm-chart.sh cert-manager-webhook-hetzner-{{ .Version }}.tgz
+    env:
+      - CHART_REPO_REMOTE={{ .Env.CHART_REPO_REMOTE }}

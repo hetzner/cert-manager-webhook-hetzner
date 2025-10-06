@@ -1,0 +1,75 @@
+# -- The GroupName here is used to identify your company or business unit that
+# created this webhook.
+# For example, this may be "acme.mycompany.com".
+# This name will need to be referenced in each Issuer's `webhook` stanza to
+# inform cert-manager of where to send ChallengePayload resources in order to
+# solve the DNS01 challenge.
+# This group name should be **unique**, hence using your own company's domain
+# here is recommended.
+# Each webhook deployment is responsible for one Hetzner Cloud project, where
+# the access token is provided. A Hetzner Cloud project can contain multiple
+# zones.
+groupName: my-hetzner-project
+
+# -- Additional environment variables, where each key represents the name of the variable.
+# The value follows standard Kubernetes environment variable formats.
+env: {}
+
+certManager:
+  # -- Namespace of your cert-manager deployment.
+  namespace: cert-manager
+  # -- Name of the cert-managers service account.
+  serviceAccountName: cert-manager
+
+# -- Additional image pull secrets in the [standard Kubernetes format](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/)
+imagePullSecrets: []
+
+image:
+  # -- Repository of the webhooks image.
+  repository: docker.io/hetznercloud/cert-manager-webhook-hetzner
+  # -- Tag of the webhooks image.
+  tag: latest
+  # -- Pull policy of the webhooks image.
+  pullPolicy: IfNotPresent
+
+# -- Override the name of the chart.
+nameOverride: ""
+# -- Override the full name of the chart.
+fullnameOverride: ""
+
+service:
+  # -- Kubernetes service type of the webhooks service.
+  type: ClusterIP
+  # -- Port of the webhooks service.
+  port: 443
+
+metrics:
+  serviceMonitor:
+    # -- Deploys a ServiceMonitor to scrape the metrics. **Requires** the ServiceMonitor CRD.
+    enabled: false
+
+# -- Number of replicas.
+replicaCount: 1
+
+# -- [Kubernetes resource management](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/) for the webhook
+resources:
+  {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #  cpu: 100m
+  #  memory: 128Mi
+  # requests:
+  #  cpu: 100m
+  #  memory: 128Mi
+
+# -- [Kubernetes node selector](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#nodeselector) for the webhook.
+nodeSelector: {}
+
+# -- [Kubernetes tolerations](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration) for the webhook.
+tolerations: []
+
+# -- [Kubernetes affinities](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#affinity-and-anti-affinity) for the webhook.
+affinity: {}

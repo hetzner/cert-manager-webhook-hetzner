@@ -1,0 +1,33 @@
+name: Releaser-pleaser
+
+on:
+  push:
+    branches: [main]
+  pull_request_target:
+    types:
+      - edited
+      - labeled
+      - unlabeled
+
+concurrency:
+  group: releaser-pleaser
+  cancel-in-progress: true
+
+jobs:
+  releaser-pleaser:
+    # Do not run on forks.
+    if: github.repository == 'hetzner/cert-manager-webhook-hetzner'
+
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: releaser-pleaser
+        uses: apricote/releaser-pleaser@v0.7.1
+        with:
+          token: ${{ secrets.HCLOUD_BOT_TOKEN }}
+          extra-files: |
+            internal/version/version.go
+            chart/Chart.yaml
+            chart/.snapshots/example.yaml
