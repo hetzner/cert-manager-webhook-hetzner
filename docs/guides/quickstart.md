@@ -34,7 +34,7 @@ helm repo update hcloud
 5. Install the webhook:
 
 ```bash
-helm install hetzner-cert-manager-webhook hcloud/hetzner-cert-manager-webhook -n cert-manager --set groupName="acme.mycompany.com"
+helm install cert-manager-webhook-hetzner hcloud/cert-manager-webhook-hetzner -n cert-manager --set groupName="acme.mycompany.com"
 ```
 
 6. Configure an `Issuer` or `ClusterIssuer` to suit your needs, as described in the official cert-manager [documentation](https://cert-manager.io/docs/configuration/acme/).
