@@ -1,7 +1,5 @@
 # cert-manager-webhook-hetzner
 
-![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square)
-
 cert-manager ACME webhook for Hetzner
 
 ## Values
@@ -26,4 +24,3 @@ cert-manager ACME webhook for Hetzner
 | service.port | int | `443` | Port of the webhooks service. |
 | service.type | string | `"ClusterIP"` | Kubernetes service type of the webhooks service. |
 | tolerations | list | `[]` | [Kubernetes tolerations](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration) for the webhook. |
-
