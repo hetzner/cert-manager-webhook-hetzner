@@ -263,7 +263,7 @@ resource "kubernetes_deployment" "unbound" {
 
         container {
           name  = "unbound"
-          image = "ghcr.io/crazy-max/unbound:1.23.1"
+          image = "ghcr.io/crazy-max/unbound:1.24.0"
 
           port {
             name           = "dns"
