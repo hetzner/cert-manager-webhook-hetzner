@@ -16,12 +16,15 @@ TESTDATA = testdata/env testdata/hetzner/secret.yaml
 test:
 	go test -v ./...
 
+.PHONY: e2e-setup
+e2e-setup: $(TESTDATA)
+
 .PHONY: e2e
 e2e: $(TESTDATA)
 	source testdata/env; go test -v -tags e2e -timeout=30m ./...
 
-.PHONY: test-coverage
-test-coverage: $(TESTDATA)
+.PHONY: e2e-coverage
+e2e-coverage: $(TESTDATA)
 	source testdata/env; go test -v -tags e2e -timeout=30m -coverpkg=./... -coverprofile=coverage.txt -covermode count ./...
 
 .PHONY: helm-package
