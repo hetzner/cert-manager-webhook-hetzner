@@ -1,5 +1,11 @@
 # Changelog
 
+## [v0.1.1](https://github.com/hetzner/cert-manager-webhook-hetzner/releases/tag/v0.1.1)
+
+### Bug Fixes
+
+- do not use the latest container image tag (#18)
+
 ## [v0.1.0](https://github.com/hetzner/cert-manager-webhook-hetzner/releases/tag/v0.1.0)
 
 This release introduces the new [cert-manager](https://cert-manager.io) webhook for Hetzner.
