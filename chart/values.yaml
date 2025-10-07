@@ -25,11 +25,12 @@ certManager:
 imagePullSecrets: []
 
 image:
-  # -- Repository of the webhooks image.
+  # -- Repository of the webhook image.
   repository: docker.io/hetznercloud/cert-manager-webhook-hetzner
-  # -- Tag of the webhooks image.
-  tag: latest
-  # -- Pull policy of the webhooks image.
+  # -- Tag of the webhook image.
+  # @default -- Current version
+  tag: v0.1.0 # x-releaser-pleaser-version
+  # -- Pull policy of the webhook image.
   pullPolicy: IfNotPresent
 
 # -- Override the name of the chart.
@@ -38,9 +39,9 @@ nameOverride: ""
 fullnameOverride: ""
 
 service:
-  # -- Kubernetes service type of the webhooks service.
+  # -- Kubernetes service type of the webhook service.
   type: ClusterIP
-  # -- Port of the webhooks service.
+  # -- Port of the webhook service.
   port: 443
 
 metrics:
