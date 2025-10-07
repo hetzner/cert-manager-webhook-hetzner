@@ -1,6 +1,6 @@
 # cert-manager-webhook-hetzner
 
-![Maturity](https://img.shields.io/badge/maturity-experiment-orange)
+![Maturity](https://img.shields.io/badge/maturity-experiment-orange) [![codecov](https://codecov.io/gh/hetzner/cert-manager-webhook-hetzner/graph/badge.svg?token=Z40LNEST2V)](https://codecov.io/gh/hetzner/cert-manager-webhook-hetzner)
 
 This webhook creates the necessary DNS entries in the [Hetzner DNS API](https://docs.hetzner.cloud/reference/cloud#zones) to solve a [DNS01 challenge](https://letsencrypt.org/docs/challenge-types/#dns-01-challenge) for a cert-manager [`Issuer`](https://cert-manager.io/docs/concepts/issuer/) of the [ACME](https://cert-manager.io/docs/configuration/acme/) type.
 
