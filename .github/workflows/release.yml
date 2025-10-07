@@ -11,6 +11,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
 
       - name: Login to DockerHub
         uses: docker/login-action@v3
@@ -21,6 +23,12 @@ jobs:
       - uses: actions/setup-go@v6
         with:
           go-version-file: go.mod
+
+      # Git is used to push helm chart to hetznercloud/helm-charts
+      - name: Setup Git
+        run: |
+          git config --global user.name hcloud-bot
+          git config --global user.email github-bot@hetzner-cloud.de
 
       - name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v6
