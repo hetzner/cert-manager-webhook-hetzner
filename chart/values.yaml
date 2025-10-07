@@ -28,7 +28,8 @@ image:
   # -- Repository of the webhooks image.
   repository: docker.io/hetznercloud/cert-manager-webhook-hetzner
   # -- Tag of the webhooks image.
-  tag: latest
+  # @default -- Latest version
+  tag: v0.1.0 # x-releaser-pleaser-version
   # -- Pull policy of the webhooks image.
   pullPolicy: IfNotPresent
 
