@@ -4,9 +4,9 @@ Welcome to the documentation for the **cert-manager webhook Hetzner**.
 
 This documentation is written and organized following the [Diátaxis guidelines](https://diataxis.fr/). Below you can find a high-level overview of where to look for certain things:
 
-- [Guides](guides)
-- [Reference](reference)
-- [Explanation](explanation)
+- [Guides](guides/README.md)
+- [Reference](reference/README.md)
+- [Explanation](explanation/README.md)
 
 ## Getting help
 

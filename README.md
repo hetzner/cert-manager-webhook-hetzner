@@ -9,7 +9,7 @@ This webhook creates the necessary DNS entries in the [Hetzner DNS API](https://
 - :rocket: See the [quick start guide](docs/guides/quickstart.md) to get you started.
 - :book: See the [configuration reference](docs/reference/issuer-configuration.md) for the available configuration.
 
-For more information, see the [documentation](docs/).
+For more information, see the [documentation](docs/README.md).
 
 ## Development
 
