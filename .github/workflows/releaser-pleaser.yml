@@ -29,5 +29,6 @@ jobs:
           token: ${{ secrets.HCLOUD_BOT_TOKEN }}
           extra-files: |
             internal/version/version.go
-            chart/Chart.yaml
             chart/.snapshots/example.yaml
+            chart/Chart.yaml
+            chart/values.yaml
