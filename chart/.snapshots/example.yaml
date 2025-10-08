@@ -44,7 +44,7 @@ metadata:
     heritage: Helm
 rules:
   - apiGroups:
-      - my-hetzner-project
+      - acme.hetzner.com
     resources:
       - "*"
     verbs:
@@ -196,7 +196,7 @@ spec:
             - --secure-port=8443
           env:
             - name: GROUP_NAME
-              value: "my-hetzner-project"
+              value: "acme.hetzner.com"
           ports:
             - name: https
               containerPort: 8443
@@ -234,7 +234,7 @@ spec:
 apiVersion: apiregistration.k8s.io/v1
 kind: APIService
 metadata:
-  name: v1alpha1.my-hetzner-project
+  name: v1alpha1.acme.hetzner.com
   labels:
     app: cert-manager-webhook-hetzner
     chart: cert-manager-webhook-hetzner-0.1.1 # x-releaser-pleaser-version
@@ -243,7 +243,7 @@ metadata:
   annotations:
     cert-manager.io/inject-ca-from: "integrations/snapshot-cert-manager-webhook-hetzner-webhook-tls"
 spec:
-  group: my-hetzner-project
+  group: acme.hetzner.com
   groupPriorityMinimum: 1000
   versionPriority: 15
   service:

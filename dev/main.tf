@@ -61,7 +61,7 @@ resource "helm_release" "cert_manager" {
 
   provisioner "local-exec" {
     when    = destroy
-    command = ". files/env.sh && kubectl delete apiservices.apiregistration.k8s.io v1alpha1.my-hetzner-project || true"
+    command = ". files/env.sh && kubectl delete apiservices.apiregistration.k8s.io v1alpha1.acme.hetzner.com || true"
   }
 }
 

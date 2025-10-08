@@ -12,7 +12,7 @@ spec:
     solvers:
       - dns01:
           webhook:
-            groupName: my-hetzner-project
+            groupName: acme.hetzner.com
             solverName: hetzner
             config:
               tokenSecretKeyRef:
