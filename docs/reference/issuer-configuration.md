@@ -48,7 +48,7 @@ The webhook is responsible for one or more issuers, each with its own configurat
 solvers:
   - dns01:
       webhook:
-        groupName: acme.mycompany.com
+        groupName: acme.hetzner.com
         solverName: hetzner
         config:
           tokenSecretKeyRef:
