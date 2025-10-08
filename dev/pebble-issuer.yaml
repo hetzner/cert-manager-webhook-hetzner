@@ -16,5 +16,5 @@ spec:
             solverName: hetzner
             config:
               tokenSecretKeyRef:
-                name: hcloud
+                name: hetzner
                 key: token
