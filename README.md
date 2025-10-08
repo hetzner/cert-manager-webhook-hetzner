@@ -65,9 +65,7 @@ else they will have undetermined behaviour when used with cert-manager.
 
 You can run the test suite by:
 
-1. Placing your base64 encoded hcloud API token in `testdata/hetzner/secret.yaml`
-2. Run the test suite:
-
 ```bash
-make test
+HETZNER_TOKEN="your-secret-token" make e2e-setup
+make e2e
 ```
