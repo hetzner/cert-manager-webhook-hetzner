@@ -2,7 +2,7 @@
 
 This page references the `Issuer` and `ClusterIssuer` configurations for the cert-manager webhook Hetzner.
 
-The webhook is responsible for one or more issuers, each with its own configuration. The following options are available:
+The webhook is responsible for one or more issuers, each with its own configuration. It is also possible for each Issuer to use its own Hetzner Cloud API token. The following options are available:
 
 <table>
     <tr>
