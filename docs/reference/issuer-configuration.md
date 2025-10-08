@@ -16,9 +16,8 @@ The webhook is responsible for one or more issuers, each with its own configurat
         <td>string (<strong>Required</strong>)</td>
         <td></td>
         <td>
-            The group name is used to uniquely identify your company or business unit that created this webhook.
-            It is referenced in each Issuer's `webhook` stanza to inform cert-manager of where to send `ChallengePayload` resources
-            in order to solve the DNS01 challenge. A suitable choice is your own company's domain.
+            Always set this value to <code>acme.hetzner.com</code>,
+            unless you configured a different <code>groupName</code> for the Helm chart.
         </td>
     </tr>
     <tr>

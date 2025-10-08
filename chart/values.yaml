@@ -6,9 +6,6 @@
 # solve the DNS01 challenge.
 # This group name should be **unique**, hence using your own company's domain
 # here is recommended.
-# Each webhook deployment is responsible for one Hetzner Cloud project, where
-# the access token is provided. A Hetzner Cloud project can contain multiple
-# zones.
 groupName: acme.hetzner.com
 
 # -- Additional environment variables, where each key represents the name of the variable.
