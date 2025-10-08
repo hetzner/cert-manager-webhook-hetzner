@@ -14,7 +14,7 @@ data "local_file" "pebble_config" {
 }
 
 provider "helm" {
-  kubernetes {
+  kubernetes = {
     config_path = data.local_sensitive_file.kubeconfig.filename
   }
 }
@@ -24,7 +24,7 @@ provider "kubernetes" {
 }
 
 module "dev" {
-  source = "github.com/hetznercloud/kubernetes-dev-env?ref=v0.9.1"
+  source = "github.com/hetznercloud/kubernetes-dev-env?ref=v0.9.2"
 
   name                 = "cert-manager-webhook-${replace(var.name, "/[^a-zA-Z0-9-_]/", "-")}"
   hcloud_token         = var.hetzner_token
@@ -48,15 +48,16 @@ resource "helm_release" "cert_manager" {
   version    = "v1.18.2"
   namespace  = "cert-manager"
 
-  set {
-    name  = "crds.enabled"
-    value = "true"
-  }
-
-  set {
-    name  = "extraArgs"
-    value = "{--dns01-recursive-nameservers-only,--dns01-recursive-nameservers=unbound.unbound.svc.cluster.local:53}"
-  }
+  set = [
+    {
+      name  = "crds.enabled"
+      value = "true"
+    },
+    {
+      name  = "extraArgs"
+      value = "{--dns01-recursive-nameservers-only,--dns01-recursive-nameservers=unbound.unbound.svc.cluster.local:53}"
+    }
+  ]
 
   provisioner "local-exec" {
     when    = destroy
@@ -64,15 +65,15 @@ resource "helm_release" "cert_manager" {
   }
 }
 
-resource "kubernetes_secret_v1" "hcloud_token" {
+resource "kubernetes_secret_v1" "hetzner_token" {
   depends_on = [kubernetes_namespace.cert-manager]
   metadata {
-    name      = "hcloud"
+    name      = "hetzner"
     namespace = "cert-manager"
   }
 
   data = {
-    token = var.hcloud_token
+    token = var.hetzner_token
   }
 }
 
