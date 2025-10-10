@@ -16,14 +16,14 @@ import (
 	"github.com/hetzner/cert-manager-webhook-hetzner/internal/version"
 )
 
-var GroupName = os.Getenv("GROUP_NAME")
-
 func main() {
-	if GroupName == "" {
-		panic("GROUP_NAME must be specified")
-	}
-
 	logger := newLogger()
+
+	groupName, ok := os.LookupEnv("GROUP_NAME")
+	if !ok || groupName == "" {
+		logger.Error("GROUP_NAME must be specified")
+		os.Exit(1)
+	}
 
 	logger.Info("starting webhook", "version", version.Version)
 
@@ -54,7 +54,7 @@ func main() {
 	// You can register multiple DNS provider implementations with a single
 	// webhook, where the Name() method will be used to disambiguate between
 	// the different implementations.
-	cmd.RunWebhookServer(GroupName, hetzner.New(logger, registry))
+	cmd.RunWebhookServer(groupName, hetzner.New(logger, registry))
 
 	{
 		ctx, cancel := context.WithTimeout(context.Background(), time.Minute)

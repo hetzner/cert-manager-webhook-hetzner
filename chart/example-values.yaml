@@ -1,4 +1,4 @@
-groupName: my-hetzner-project
+groupName: acme.hetzner.com
 
 certManager:
   namespace: cert-manager
