@@ -1,5 +1,15 @@
 # Changelog
 
+## [v0.2.0](https://github.com/hetzner/cert-manager-webhook-hetzner/releases/tag/v0.2.0)
+
+### Default GroupName `acme.hetzner.com`
+
+With this version we have changed the default `groupName` of the Helm chart to `acme.hetzner.com`. If you have prevously deployed the webhook according to our quickstart guide, you will not run into any issues when upgrading. If you want to update your existing webhook to the `acme.hetzner.com` `groupName` you have to specify the Helm value `groupName=acme.hetzner.com` during the upgrade and update your existing Issuers/ClusterIssuers accordingly.
+
+### Features
+
+- use default groupName acme.hetzner.com (#28)
+
 ## [v0.1.1](https://github.com/hetzner/cert-manager-webhook-hetzner/releases/tag/v0.1.1)
 
 ### Bug Fixes
