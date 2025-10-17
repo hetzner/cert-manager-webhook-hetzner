@@ -11,3 +11,8 @@ variable "k3s_channel" {
   type    = string
   default = "stable"
 }
+
+variable "use_unbound" {
+  type    = bool
+  default = false
+}
