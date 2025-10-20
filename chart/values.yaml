@@ -71,3 +71,9 @@ tolerations: []
 
 # -- [Kubernetes affinities](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#affinity-and-anti-affinity) for the webhook.
 affinity: {}
+
+# -- [Kubernetes pod security context](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod) for the webhook.
+podSecurityContext: {}
+
+# -- [Kubernetes container security context](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-container) for the webhook.
+containerSecurityContext: {}

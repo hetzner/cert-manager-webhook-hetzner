@@ -23,6 +23,9 @@ spec:
     {{- with .Values.imagePullSecrets }}
       imagePullSecrets: {{- toYaml . | nindent 8 }}
     {{- end }}
+    {{- with .Values.podSecurityContext }}
+      securityContext: {{- toYaml . | nindent 8 }}
+    {{- end }}
       serviceAccountName: {{ include "cert-manager-webhook-hetzner.fullname" . }}
       containers:
         - name: {{ .Chart.Name }}
@@ -60,6 +63,9 @@ spec:
             - name: certs
               mountPath: /tls
               readOnly: true
+        {{- with .Values.containerSecurityContext }}
+          securityContext: {{- toYaml . | nindent 12 }}
+        {{- end }}
           resources:
 {{ toYaml .Values.resources | indent 12 }}
       volumes:

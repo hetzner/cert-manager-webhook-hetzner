@@ -27,3 +27,10 @@ resources:
   requests:
     cpu: 100m
     memory: 128Mi
+
+podSecurityContext:
+  runAsUser: 1000
+  runAsGroup: 1000
+
+containerSecurityContext:
+  allowPrivilegeEscalation: false

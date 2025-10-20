@@ -185,6 +185,9 @@ spec:
         app: cert-manager-webhook-hetzner
         release: snapshot
     spec:
+      securityContext:
+        runAsGroup: 1000
+        runAsUser: 1000
       serviceAccountName: snapshot-cert-manager-webhook-hetzner
       containers:
         - name: cert-manager-webhook-hetzner
@@ -218,6 +221,8 @@ spec:
             - name: certs
               mountPath: /tls
               readOnly: true
+          securityContext:
+            allowPrivilegeEscalation: false
           resources:
             limits:
               cpu: 100m
