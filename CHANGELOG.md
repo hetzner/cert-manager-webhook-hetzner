@@ -1,5 +1,11 @@
 # Changelog
 
+## [v0.3.0](https://github.com/hetzner/cert-manager-webhook-hetzner/releases/tag/v0.3.0)
+
+### Features
+
+- **helm**: configurable podSecurityContext and securityContext (#37)
+
 ## [v0.2.0](https://github.com/hetzner/cert-manager-webhook-hetzner/releases/tag/v0.2.0)
 
 ### Default GroupName `acme.hetzner.com`
