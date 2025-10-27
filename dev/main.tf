@@ -24,7 +24,7 @@ provider "kubernetes" {
 }
 
 module "dev" {
-  source = "github.com/hetznercloud/kubernetes-dev-env?ref=v0.9.2"
+  source = "github.com/hetznercloud/kubernetes-dev-env?ref=v0.9.3"
 
   name                 = "cert-manager-webhook-${replace(var.name, "/[^a-zA-Z0-9-_]/", "-")}"
   hcloud_token         = var.hetzner_token
