@@ -12,6 +12,7 @@ import (
 	"k8s.io/client-go/rest"
 
 	"github.com/hetznercloud/hcloud-go/v2/hcloud"
+	"github.com/hetznercloud/hcloud-go/v2/hcloud/exp/zoneutil"
 )
 
 // TTL defines the TTL of the records we create. The TTL is small, as these
@@ -92,7 +93,7 @@ func (c *Solver) Present(ch *v1alpha1.ChallengeRequest) error {
 	action, _, err := hClient.Zone.AddRRSetRecords(ctx,
 		zoneRRSet,
 		hcloud.ZoneRRSetAddRecordsOpts{
-			Records: []hcloud.ZoneRRSetRecord{{Value: fmt.Sprintf("%q", ch.Key)}},
+			Records: []hcloud.ZoneRRSetRecord{{Value: zoneutil.FormatTXTRecord(ch.Key)}},
 			TTL:     hcloud.Ptr(TTL),
 		},
 	)
