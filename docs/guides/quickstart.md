@@ -2,7 +2,7 @@
 
 Before deploying the webhook you need to install cert-manager. You can find the official install instructions [here](https://cert-manager.io/docs/installation/).
 
-1. Create a read+write API token in the [Hetzner Cloud Console](https://console.hetzner.cloud/) as described in the [official guide](https://docs.hetzner.com/cloud/api/getting-started/generating-api-token).
+1. Create a read+write API token in the [Hetzner Console](https://console.hetzner.com/) as described in the [official guide](https://docs.hetzner.com/cloud/api/getting-started/generating-api-token).
 
 2. Create a secret containing the API token. If you plan to create a namespace scoped `Issuer`, place the secret in the Issuers namespace. If you plan to configure a `ClusterIssuer`, place the secret in the configured [cluster resource namespace](https://cert-manager.io/docs/configuration/#cluster-resource-namespace), defaulting to `cert-manager`.
 
