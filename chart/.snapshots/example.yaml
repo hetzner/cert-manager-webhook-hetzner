@@ -191,7 +191,7 @@ spec:
       serviceAccountName: snapshot-cert-manager-webhook-hetzner
       containers:
         - name: cert-manager-webhook-hetzner
-          image: "docker.io/hetznercloud/cert-manager-webhook-hetzner:v0.3.0"
+          image: "docker.io/hetznercloud/cert-manager-webhook-hetzner:v0.3.0" # x-releaser-pleaser-version
           imagePullPolicy: IfNotPresent
           args:
             - --tls-cert-file=/tls/tls.crt
