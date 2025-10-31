@@ -30,5 +30,6 @@ jobs:
           extra-files: |
             internal/version/version.go
             chart/.snapshots/example.yaml
+            chart/example-values.yaml
             chart/Chart.yaml
             chart/values.yaml
