@@ -14,7 +14,7 @@ cert-manager ACME webhook for Hetzner
 | fullnameOverride | string | `""` | Override the full name of the chart. |
 | groupName | string | `"acme.hetzner.com"` | The GroupName here is used to identify your company or business unit that created this webhook. For example, this may be "acme.mycompany.com". This name will need to be referenced in each Issuer's `webhook` stanza to inform cert-manager of where to send ChallengePayload resources in order to solve the DNS01 challenge. This group name should be **unique**, hence using your own company's domain here is recommended. |
 | image.pullPolicy | string | `"IfNotPresent"` | Pull policy of the webhook image. |
-| image.repository | string | `"docker.io/hetznercloud/cert-manager-webhook-hetzner"` | Repository of the webhook image. |
+| image.repository | string | `"docker.io/hetzner/cert-manager-webhook-hetzner"` | Repository of the webhook image. |
 | image.tag | string | Current version | Tag of the webhook image. |
 | imagePullSecrets | list | `[]` | Additional image pull secrets in the [standard Kubernetes format](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/) |
 | metrics.serviceMonitor.enabled | bool | `false` | Deploys a ServiceMonitor to scrape the metrics. **Requires** the ServiceMonitor CRD. |

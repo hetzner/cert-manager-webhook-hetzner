@@ -5,7 +5,7 @@ certManager:
   serviceAccountName: cert-manager
 
 image:
-  repository: docker.io/hetznercloud/cert-manager-webhook-hetzner
+  repository: docker.io/hetzner/cert-manager-webhook-hetzner
   tag: v0.3.0 # x-releaser-pleaser-version
   pullPolicy: IfNotPresent
 
