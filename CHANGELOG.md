@@ -1,5 +1,27 @@
 # Changelog
 
+## [v0.4.0](https://github.com/hetzner/cert-manager-webhook-hetzner/releases/tag/v0.4.0)
+
+### New container image namespace
+
+With this release, we moved our container image to [docker.io/hetzner/cert-manager-webhook-hetzner](https://hub.docker.com/r/hetzner/cert-manager-webhook-hetzner).
+
+Users of the Helm chart need to take action if they have manually set the `image.repository` value.
+
+```diff
+ # ...
+ image:
+-  repository: docker.io/hetznercloud/cert-manager-webhook-hetzner
++  repository: docker.io/hetzner/cert-manager-webhook-hetzner
+ # ...
+```
+
+Existing images in the old `hetznercloud` namespace will remain available, but new images will only be pushed to the new `hetzner` namespace.
+
+### Features
+
+- push image to hetzner docker namespace (#45)
+
 ## [v0.3.0](https://github.com/hetzner/cert-manager-webhook-hetzner/releases/tag/v0.3.0)
 
 ### Features
