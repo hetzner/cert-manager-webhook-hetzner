@@ -4,7 +4,7 @@ metadata:
   name: cert-manager-webhook-hetzner
 build:
   artifacts:
-    - image: docker.io/hetznercloud/cert-manager-webhook-hetzner
+    - image: docker.io/hetzner/cert-manager-webhook-hetzner
       ko: {}
   local:
     useBuildkit: true

@@ -27,7 +27,7 @@ kos:
   - id: container-image
     build: binary
     repositories:
-      - hetznercloud/cert-manager-webhook-hetzner
+      - hetzner/cert-manager-webhook-hetzner
     platforms:
       - linux/amd64
       - linux/arm64

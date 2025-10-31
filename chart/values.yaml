@@ -23,7 +23,7 @@ imagePullSecrets: []
 
 image:
   # -- Repository of the webhook image.
-  repository: docker.io/hetznercloud/cert-manager-webhook-hetzner
+  repository: docker.io/hetzner/cert-manager-webhook-hetzner
   # -- Tag of the webhook image.
   # @default -- Current version
   tag: v0.3.0 # x-releaser-pleaser-version
