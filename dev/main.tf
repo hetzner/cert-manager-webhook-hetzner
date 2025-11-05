@@ -2,6 +2,9 @@ locals {
   kubeconfig_path     = abspath("${path.root}/files/kubeconfig.yaml")
   pebble_config_path  = abspath("${path.module}/pebble-config.json")
   unbound_config_path = abspath("${path.module}/unbound.conf")
+
+  pebble_args_base = ["-config=/pebble-config.json"]
+  pebble_args = var.use_unbound ? concat(local.pebble_args_base, ["-dnsserver=unbound.unbound.svc.cluster.local:53"]) : local.pebble_args_base
 }
 
 data "local_sensitive_file" "kubeconfig" {
@@ -26,9 +29,9 @@ provider "kubernetes" {
 module "dev" {
   source = "github.com/hetznercloud/kubernetes-dev-env?ref=v0.9.4"
 
-  name                 = "cert-manager-webhook-${replace(var.name, "/[^a-zA-Z0-9-_]/", "-")}"
-  hcloud_token         = var.hetzner_token
-  worker_count         = 0
+  name         = "cert-manager-webhook-${replace(var.name, "/[^a-zA-Z0-9-_]/", "-")}"
+  hcloud_token = var.hetzner_token
+  worker_count = 0
 
   k3s_channel = var.k3s_channel
 }
@@ -55,7 +58,7 @@ resource "helm_release" "cert_manager" {
     },
     {
       name  = "extraArgs"
-      value = "{--dns01-recursive-nameservers-only,--dns01-recursive-nameservers=unbound.unbound.svc.cluster.local:53}"
+      value = var.use_unbound ? "{--dns01-recursive-nameservers-only,--dns01-recursive-nameservers=unbound.unbound.svc.cluster.local:53}" : "{}"
     }
   ]
 
@@ -153,7 +156,7 @@ resource "kubernetes_deployment" "pebble" {
           name    = "pebble"
           image   = "letsencrypt/pebble:latest"
           command = ["/usr/bin/pebble"]
-          args    = ["-config=/test/config/pebble-config.json", "-dnsserver=unbound.unbound.svc.cluster.local:53"]
+          args    = local.pebble_args
 
           port {
             name           = "http"
@@ -164,7 +167,7 @@ resource "kubernetes_deployment" "pebble" {
           volume_mount {
             name       = "config-volume"
             read_only  = true
-            mount_path = "/test/config/pebble-config.json"
+            mount_path = "/pebble-config.json"
             sub_path   = "pebble-config.json"
           }
 
@@ -184,6 +187,7 @@ resource "terraform_data" "pebble-issuer" {
 }
 
 resource "kubernetes_namespace" "unbound" {
+  count      = var.use_unbound ? 1 : 0
   depends_on = [module.dev]
   metadata {
     name = "unbound"
@@ -191,6 +195,7 @@ resource "kubernetes_namespace" "unbound" {
 }
 
 resource "kubernetes_config_map" "unbound" {
+  count      = var.use_unbound ? 1 : 0
   depends_on = [kubernetes_namespace.unbound]
   metadata {
     name      = "unbound"
@@ -203,6 +208,7 @@ resource "kubernetes_config_map" "unbound" {
 }
 
 resource "kubernetes_service" "unbound" {
+  count      = var.use_unbound ? 1 : 0
   depends_on = [kubernetes_namespace.unbound]
   metadata {
     name      = "unbound"
@@ -226,6 +232,7 @@ resource "kubernetes_service" "unbound" {
 }
 
 resource "kubernetes_deployment" "unbound" {
+  count      = var.use_unbound ? 1 : 0
   depends_on = [kubernetes_config_map.unbound]
   metadata {
     name      = "unbound"
