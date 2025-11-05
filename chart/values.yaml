@@ -77,3 +77,7 @@ podSecurityContext: {}
 
 # -- [Kubernetes container security context](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-container) for the webhook.
 containerSecurityContext: {}
+
+# -- [Kubernetes deployment strategy](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#strategy) for the deployment.
+deploymentStrategy:
+  type: RollingUpdate

@@ -179,6 +179,8 @@ spec:
     matchLabels:
       app: cert-manager-webhook-hetzner
       release: snapshot
+  strategy:
+    type: RollingUpdate
   template:
     metadata:
       labels:
