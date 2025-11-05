@@ -81,3 +81,9 @@ containerSecurityContext: {}
 # -- [Kubernetes deployment strategy](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#strategy) for the deployment.
 deploymentStrategy:
   type: RollingUpdate
+
+# -- Labels added to the deployment metadata
+deploymentLabels: {}
+
+# -- Annotations added to the deployment metadata
+deploymentAnnotations: {}
