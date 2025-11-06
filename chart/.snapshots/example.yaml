@@ -189,7 +189,10 @@ spec:
     spec:
       securityContext:
         runAsGroup: 1000
+        runAsNonRoot: true
         runAsUser: 1000
+        seccompProfile:
+          type: RuntimeDefault
       serviceAccountName: snapshot-cert-manager-webhook-hetzner
       containers:
         - name: cert-manager-webhook-hetzner
@@ -225,6 +228,9 @@ spec:
               readOnly: true
           securityContext:
             allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
           resources:
             limits:
               cpu: 100m

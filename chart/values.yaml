@@ -73,10 +73,19 @@ tolerations: []
 affinity: {}
 
 # -- [Kubernetes pod security context](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod) for the webhook.
-podSecurityContext: {}
+# @default -- [Restricted](https://kubernetes.io/docs/concepts/security/pod-security-standards/#restricted)
+podSecurityContext:
+  runAsNonRoot: true
+  seccompProfile:
+    type: RuntimeDefault
 
 # -- [Kubernetes container security context](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-container) for the webhook.
-containerSecurityContext: {}
+# @default -- [Restricted](https://kubernetes.io/docs/concepts/security/pod-security-standards/#restricted)
+containerSecurityContext:
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop:
+      - ALL
 
 # -- [Kubernetes deployment strategy](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#strategy) for the deployment.
 strategy:
