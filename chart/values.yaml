@@ -79,13 +79,13 @@ podSecurityContext: {}
 containerSecurityContext: {}
 
 # -- [Kubernetes deployment strategy](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#strategy) for the deployment.
-deploymentStrategy:
+strategy:
   type: RollingUpdate
 
 # -- [Kubernetes labels](https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/) added to the deployment metadata
 labels: {}
 
-# -- [Kubernetees annotations](https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/) added to the deployment metadata
+# -- [Kubernetes annotations](https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/) added to the deployment metadata
 annotations: {}
 
 # -- [Kubernetes pod disruption budget](https://kubernetes.io/docs/tasks/run-application/configure-pdb/)

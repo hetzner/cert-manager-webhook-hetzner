@@ -22,7 +22,7 @@ spec:
     matchLabels:
       app: {{ include "cert-manager-webhook-hetzner.name" . }}
       release: {{ .Release.Name }}
-  {{- with .Values.deploymentStrategy }}
+  {{- with .Values.strategy }}
   strategy:
     {{- toYaml . | trim | nindent 4 }}
   {{- end }}
