@@ -82,8 +82,8 @@ containerSecurityContext: {}
 deploymentStrategy:
   type: RollingUpdate
 
-# -- Labels added to the deployment metadata
-deploymentLabels: {}
+# -- [Kubernetes labels](https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/) added to the deployment metadata
+labels: {}
 
-# -- Annotations added to the deployment metadata
-deploymentAnnotations: {}
+# -- [Kubernetees annotations](https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/) added to the deployment metadata
+annotations: {}
