@@ -150,10 +150,9 @@ resource "kubernetes_deployment" "pebble" {
         }
 
         container {
-          name    = "pebble"
-          image   = "letsencrypt/pebble:latest"
-          command = ["/usr/bin/pebble"]
-          args    = ["-config=/test/config/pebble-config.json", "-dnsserver=unbound.unbound.svc.cluster.local:53"]
+          name  = "pebble"
+          image = "ghcr.io/letsencrypt/pebble:2.8.0" # renovate: datasource=docker depName=ghcr.io/letsencrypt/pebble
+          args  = ["-config=/test/config/pebble-config.json", "-dnsserver=unbound.unbound.svc.cluster.local:53"]
 
           port {
             name           = "http"
