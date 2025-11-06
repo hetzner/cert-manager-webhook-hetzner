@@ -1,5 +1,13 @@
 # Changelog
 
+## [v0.5.0](https://github.com/hetzner/cert-manager-webhook-hetzner/releases/tag/v0.5.0)
+
+### Features
+
+- **chart**: add possibility to configure deployments .spec.strategy (#52)
+- **chart**: configure deployments metadata annotations and labels (#51)
+- **chart**: add pod disruption budget (#53)
+
 ## [v0.4.0](https://github.com/hetzner/cert-manager-webhook-hetzner/releases/tag/v0.4.0)
 
 ### New container image namespace
