@@ -6,7 +6,7 @@ certManager:
 
 image:
   repository: docker.io/hetzner/cert-manager-webhook-hetzner
-  tag: v0.4.0 # x-releaser-pleaser-version
+  tag: v0.5.0 # x-releaser-pleaser-version
   pullPolicy: IfNotPresent
 
 nameOverride: ""
