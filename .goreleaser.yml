@@ -33,6 +33,7 @@ kos:
       - linux/arm64
     base_image: alpine
     bare: true
+    user: 1000:1000
     labels:
       org.opencontainers.image.source: https://github.com/hetzner/cert-manager-webhook-hetzner
     tags:
