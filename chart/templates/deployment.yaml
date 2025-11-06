@@ -15,6 +15,10 @@ spec:
     matchLabels:
       app: {{ include "cert-manager-webhook-hetzner.name" . }}
       release: {{ .Release.Name }}
+  {{- with .Values.deploymentStrategy }}
+  strategy:
+    {{- toYaml . | trim | nindent 4 }}
+  {{- end }}
   template:
     metadata:
       labels:
