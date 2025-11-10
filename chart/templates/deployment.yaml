@@ -76,7 +76,7 @@ spec:
               mountPath: /tls
               readOnly: true
           {{- with .Values.containerSecurityContext }}
-          securityContext: {{- toYaml . | nindent 12 }}
+          securityContext: {{- toYamlPretty . | nindent 12 }}
           {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
