@@ -1,5 +1,15 @@
 # Changelog
 
+## [v0.6.0](https://github.com/hetzner/cert-manager-webhook-hetzner/releases/tag/v0.6.0)
+
+### Features
+
+- **helm**: default to restricted security context (#59)
+
+### Bug Fixes
+
+- **ko**: use non-root user in container image (#57)
+
 ## [v0.5.0](https://github.com/hetzner/cert-manager-webhook-hetzner/releases/tag/v0.5.0)
 
 ### Features
