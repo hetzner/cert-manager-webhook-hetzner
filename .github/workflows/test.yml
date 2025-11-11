@@ -7,7 +7,7 @@ on:
 
 jobs:
   e2e:
-    name: k8s-${{ matrix.k8s }}
+    name: e2e k8s-${{ matrix.k8s }}
     runs-on: ubuntu-latest
 
     strategy:
