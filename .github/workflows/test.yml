@@ -6,11 +6,23 @@ on:
   pull_request:
 
 jobs:
-  test:
+  e2e:
+    name: k8s-${{ matrix.k8s }}
     runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false # Continue tests matrix if a flaky run occurs.
+      matrix:
+        k8s:
+          - 1.32
+          - 1.33
+          - 1.34
 
     permissions:
       id-token: write
+
+    env:
+      KUBERNETES_VERSION: ${{ matrix.k8s }}
 
     steps:
       - uses: actions/checkout@v5

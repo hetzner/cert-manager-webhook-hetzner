@@ -1,8 +1,9 @@
 SHELL = bash
+KUBERNETES_VERSION ?= 1.34.1 # renovate: datasource=github-releases depName=kubernetes-sigs/controller-tools extractVersion=^envtest-v(?<version>.+)$
 
 # Override PATH so that the cert-manager test environment detects the required binaries.
 testdata/env:
-	setup-envtest use -p env 1.32 > $@
+	setup-envtest use -p env $(KUBERNETES_VERSION) > $@
 	echo 'export PATH=$$KUBEBUILDER_ASSETS:$$PATH' >> $@
 
 testdata/hetzner/secret.yaml: testdata/hetzner/secret.yaml.tpl
