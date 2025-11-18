@@ -1,5 +1,11 @@
 # Changelog
 
+## [v0.6.1](https://github.com/hetzner/cert-manager-webhook-hetzner/releases/tag/v0.6.1)
+
+### Bug Fixes
+
+- **helm**: allow configuring pod labels and annotations (#70)
+
 ## [v0.6.0](https://github.com/hetzner/cert-manager-webhook-hetzner/releases/tag/v0.6.0)
 
 ### Features
