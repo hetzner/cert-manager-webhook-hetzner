@@ -97,6 +97,12 @@ labels: {}
 # -- [Kubernetes annotations](https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/) added to the deployment metadata
 annotations: {}
 
+# -- [Kubernetes labels](https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/) added to the pod metadata
+podLabels: {}
+
+# -- [Kubernetes annotations](https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/) added to the pod metadata
+podAnnotations: {}
+
 # -- [Kubernetes pod disruption budget](https://kubernetes.io/docs/tasks/run-application/configure-pdb/)
 podDisruptionBudget:
   enabled: false
