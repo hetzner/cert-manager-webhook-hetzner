@@ -22,7 +22,9 @@ cert-manager ACME webhook for Hetzner
 | metrics.serviceMonitor.enabled | bool | `false` | Deploys a ServiceMonitor to scrape the metrics. **Requires** the ServiceMonitor CRD. |
 | nameOverride | string | `""` | Override the name of the chart. |
 | nodeSelector | object | `{}` | [Kubernetes node selector](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#nodeselector) for the webhook. |
+| podAnnotations | object | `{}` | [Kubernetes annotations](https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/) added to the pod metadata |
 | podDisruptionBudget | object | `{"enabled":false}` | [Kubernetes pod disruption budget](https://kubernetes.io/docs/tasks/run-application/configure-pdb/) |
+| podLabels | object | `{}` | [Kubernetes labels](https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/) added to the pod metadata |
 | podSecurityContext | object | [Restricted](https://kubernetes.io/docs/concepts/security/pod-security-standards/#restricted) | [Kubernetes pod security context](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod) for the webhook. |
 | replicaCount | int | `1` | Number of replicas. |
 | resources | object | `{}` | [Kubernetes resource management](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/) for the webhook |
