@@ -12,6 +12,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
+	"github.com/hetzner/cert-manager-webhook-hetzner/internal/limiter"
 	"github.com/hetznercloud/hcloud-go/v2/hcloud"
 	"github.com/hetznercloud/hcloud-go/v2/hcloud/exp/kit/randutil"
 	"github.com/hetznercloud/hcloud-go/v2/hcloud/exp/mockutil"
@@ -40,6 +41,7 @@ func TestPresent(t *testing.T) {
 			o := &Solver{
 				logger:         logger,
 				hClientBuilder: MockHClientBuilder(client),
+				limiter:        limiter.New(limiter.Opts{BackoffFunc: hcloud.ConstantBackoff(0)}),
 			}
 
 			ch := &v1alpha1.ChallengeRequest{
@@ -107,6 +109,7 @@ func TestCleanup(t *testing.T) {
 			o := &Solver{
 				logger:         logger,
 				hClientBuilder: MockHClientBuilder(client),
+				limiter:        limiter.New(limiter.Opts{BackoffFunc: hcloud.ConstantBackoff(0)}),
 			}
 
 			ch := &v1alpha1.ChallengeRequest{

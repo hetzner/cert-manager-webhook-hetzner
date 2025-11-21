@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log/slog"
+	"time"
 
 	"github.com/cert-manager/cert-manager/pkg/acme/webhook"
 	"github.com/cert-manager/cert-manager/pkg/acme/webhook/apis/acme/v1alpha1"
@@ -11,6 +12,7 @@ import (
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/rest"
 
+	"github.com/hetzner/cert-manager-webhook-hetzner/internal/limiter"
 	"github.com/hetznercloud/hcloud-go/v2/hcloud"
 	"github.com/hetznercloud/hcloud-go/v2/hcloud/exp/zoneutil"
 )
@@ -24,6 +26,8 @@ type Solver struct {
 	registry prometheus.Registerer
 
 	hClientBuilder HClientBuilderFunc
+
+	limiter *limiter.Limiter
 }
 
 var _ webhook.Solver = (*Solver)(nil)
@@ -32,6 +36,14 @@ func New(logger *slog.Logger, registry prometheus.Registerer) *Solver {
 	return &Solver{
 		logger:   logger,
 		registry: registry,
+		limiter: limiter.New(limiter.Opts{
+			BackoffAfter: 10,
+			BackoffFunc: hcloud.ExponentialBackoffWithOpts(hcloud.ExponentialBackoffOpts{
+				Base:       time.Second,
+				Multiplier: 2,
+				Cap:        25 * time.Second, // cert-manager reports weird errors when cap > 25 seconds.
+			}),
+		}),
 	}
 }
 
@@ -84,17 +96,38 @@ func (c *Solver) Present(ch *v1alpha1.ChallengeRequest) error {
 		return fmt.Errorf("error building zone and zone rrset: %w", err)
 	}
 
-	c.logger.Info(
-		"creating DNS TXT record",
+	logger := c.logger.With(
 		"zone-name", zoneRRSet.Zone.Name,
 		"zone-rrset-name", zoneRRSet.Name,
 	)
 
-	action, _, err := hClient.Zone.AddRRSetRecords(ctx,
-		zoneRRSet,
-		hcloud.ZoneRRSetAddRecordsOpts{
-			Records: []hcloud.ZoneRRSetRecord{{Value: zoneutil.FormatTXTRecord(ch.Key)}},
-			TTL:     hcloud.Ptr(TTL),
+	logger.Info("creating DNS TXT record")
+
+	var action *hcloud.Action
+	c.limiter.Do(
+		fmt.Sprintf("add_records:%s", zoneRRSet.Zone.Name),
+		func(h *limiter.Helper) {
+			if duration := h.Backoff(); duration > 0 {
+				logger.Warn("too many failures, limiting request rate", "duration", duration)
+
+				if err = h.Sleep(ctx, duration); err != nil {
+					return
+				}
+			}
+
+			action, _, err = hClient.Zone.AddRRSetRecords(ctx,
+				zoneRRSet,
+				hcloud.ZoneRRSetAddRecordsOpts{
+					Records: []hcloud.ZoneRRSetRecord{{Value: zoneutil.FormatTXTRecord(ch.Key)}},
+					TTL:     hcloud.Ptr(TTL),
+				},
+			)
+			if hcloud.IsError(err,
+				hcloud.ErrorCodeNotFound,
+				hcloud.ErrorCodeInvalidInput,
+			) {
+				h.Increase()
+			}
 		},
 	)
 	if err != nil {
