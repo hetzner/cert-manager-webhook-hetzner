@@ -19,3 +19,10 @@
 .project
 .idea/
 *.tmproj
+
+# Various artifacts in our charts dir
+.snapshots/
+.helmignore
+README.md.gotmpl
+example-values.yaml
+Makefile
