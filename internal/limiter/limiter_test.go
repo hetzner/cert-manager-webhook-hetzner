@@ -48,31 +48,37 @@ func TestLimiterDo(t *testing.T) {
 
 	assert.Equal(t, 0, l.counterMap["test"])
 
-	l.Do("test", func(h *Helper) {
-		duration := h.Backoff()
+	{
+		op := l.Operation("test")
+
+		duration := op.Backoff()
 		assert.Equal(t, time.Duration(0), duration)
 
-		err := h.Sleep(ctx, duration)
+		err := op.Sleep(ctx, duration)
 		assert.NoError(t, err)
 
-		h.Increase()
-	})
+		op.Failed()
+	}
 
 	assert.Equal(t, 1, l.counterMap["test"])
 
-	l.Do("test", func(h *Helper) {
-		duration := h.Backoff()
+	{
+		op := l.Operation("test")
+
+		duration := op.Backoff()
 		assert.Equal(t, 1*time.Second, duration)
 
 		// Skip sleep
 
-		h.Increase()
-	})
+		op.Failed()
+	}
 
 	assert.Equal(t, 2, l.counterMap["test"])
 
-	l.Do("test", func(h *Helper) {
-		duration := h.Backoff()
+	{
+		op := l.Operation("test")
+
+		duration := op.Backoff()
 		assert.Equal(t, 2*time.Second, duration)
 
 		// With cancelled context
@@ -80,11 +86,12 @@ func TestLimiterDo(t *testing.T) {
 		cancel()
 		<-ctx.Done()
 
-		err := h.Sleep(ctx, duration)
+		err := op.Sleep(ctx, duration)
 		assert.EqualError(t, err, "context canceled")
 
-		// No increase => reset to 0
-	})
+		// No failure => reset to 0
+		op.Succeeded()
+	}
 
 	assert.Equal(t, 0, l.counterMap["test"])
 }

@@ -2,6 +2,7 @@ package limiter
 
 import (
 	"context"
+	"log/slog"
 	"sync"
 	"time"
 
@@ -47,52 +48,65 @@ func (l *Limiter) backoff(operation string) time.Duration {
 	return l.backoffFunc(max(count-l.backoffAfter, 0))
 }
 
-func (l *Limiter) update(operation string, increase bool) {
+func (l *Limiter) update(id string, increase bool) {
 	l.counterMapLock.Lock()
 	defer l.counterMapLock.Unlock()
 
 	if increase {
-		l.counterMap[operation]++
+		l.counterMap[id]++
 	} else {
-		if l.counterMap[operation] > l.backoffAfter {
-			l.counterMap[operation] = l.backoffAfter - 1
+		if l.counterMap[id] > l.backoffAfter {
+			l.counterMap[id] = l.backoffAfter - 1
 		} else {
-			l.counterMap[operation]--
+			l.counterMap[id]--
 		}
 	}
 }
 
-func (l *Limiter) Do(operation string, fn func(h *Helper)) {
-	h := &Helper{
-		limiter:   l,
-		operation: operation,
-		increase:  false,
+func (l *Limiter) Operation(id string) *Operation {
+	return &Operation{
+		limiter: l,
+		id:      id,
 	}
-
-	fn(h)
-
-	l.update(operation, h.increase)
 }
 
-type Helper struct {
-	limiter   *Limiter
-	operation string
-	increase  bool
+type Operation struct {
+	id      string
+	limiter *Limiter
 }
 
-func (h *Helper) Backoff() time.Duration {
-	return h.limiter.backoff(h.operation)
+func (o *Operation) Backoff() time.Duration {
+	return o.limiter.backoff(o.id)
 }
 
-func (h *Helper) Increase() {
-	h.increase = true
-}
-
-func (h *Helper) Sleep(ctx context.Context, duration time.Duration) error {
+func (o *Operation) Sleep(ctx context.Context, duration time.Duration) error {
 	select {
 	case <-ctx.Done():
 		return ctx.Err()
 	case <-time.After(duration):
 	}
 	return nil
+}
+
+func (o *Operation) Limit(ctx context.Context, logger *slog.Logger) error {
+	if duration := o.Backoff(); duration > 0 {
+		logger.Warn("too many failures, limiting request rate", "duration", duration)
+
+		if err := o.Sleep(ctx, duration); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (o *Operation) Update(increase bool) {
+	o.limiter.update(o.id, increase)
+}
+
+func (o *Operation) Failed() {
+	o.limiter.update(o.id, true)
+}
+
+func (o *Operation) Succeeded() {
+	o.limiter.update(o.id, false)
 }

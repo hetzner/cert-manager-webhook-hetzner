@@ -103,33 +103,22 @@ func (c *Solver) Present(ch *v1alpha1.ChallengeRequest) error {
 
 	logger.Info("creating DNS TXT record")
 
-	var action *hcloud.Action
-	c.limiter.Do(
-		fmt.Sprintf("add_records:%s", zoneRRSet.Zone.Name),
-		func(h *limiter.Helper) {
-			if duration := h.Backoff(); duration > 0 {
-				logger.Warn("too many failures, limiting request rate", "duration", duration)
+	op := c.limiter.Operation(fmt.Sprintf("add_records:%s", zoneRRSet.Zone.Name))
+	if err := op.Limit(ctx, logger); err != nil {
+		return err
+	}
 
-				if err = h.Sleep(ctx, duration); err != nil {
-					return
-				}
-			}
-
-			action, _, err = hClient.Zone.AddRRSetRecords(ctx,
-				zoneRRSet,
-				hcloud.ZoneRRSetAddRecordsOpts{
-					Records: []hcloud.ZoneRRSetRecord{{Value: zoneutil.FormatTXTRecord(ch.Key)}},
-					TTL:     hcloud.Ptr(TTL),
-				},
-			)
-			if hcloud.IsError(err,
-				hcloud.ErrorCodeNotFound,
-				hcloud.ErrorCodeInvalidInput,
-			) {
-				h.Increase()
-			}
+	action, _, err := hClient.Zone.AddRRSetRecords(ctx,
+		zoneRRSet,
+		hcloud.ZoneRRSetAddRecordsOpts{
+			Records: []hcloud.ZoneRRSetRecord{{Value: zoneutil.FormatTXTRecord(ch.Key)}},
+			TTL:     hcloud.Ptr(TTL),
 		},
 	)
+	op.Update(hcloud.IsError(err,
+		hcloud.ErrorCodeNotFound,
+		hcloud.ErrorCodeInvalidInput,
+	))
 	if err != nil {
 		return fmt.Errorf("failed to request rrset record addition: %w", err)
 	}
