@@ -1,5 +1,11 @@
 # Changelog
 
+## [v0.6.2](https://github.com/hetzner/cert-manager-webhook-hetzner/releases/tag/v0.6.2)
+
+### Bug Fixes
+
+- limit failed api requests (#76)
+
 ## [v0.6.1](https://github.com/hetzner/cert-manager-webhook-hetzner/releases/tag/v0.6.1)
 
 ### Bug Fixes
