@@ -58,7 +58,7 @@ func (l *Limiter) update(id string, increase bool) {
 		if l.counterMap[id] > l.backoffAfter {
 			l.counterMap[id] = l.backoffAfter - 1
 		} else {
-			l.counterMap[id]--
+			l.counterMap[id] = max(0, l.counterMap[id]-1)
 		}
 	}
 }

@@ -2,6 +2,7 @@ package limiter
 
 import (
 	"context"
+	"log/slog"
 	"testing"
 	"time"
 
@@ -54,7 +55,7 @@ func TestLimiterDo(t *testing.T) {
 		duration := op.Backoff()
 		assert.Equal(t, time.Duration(0), duration)
 
-		err := op.Sleep(ctx, duration)
+		err := op.Limit(ctx, slog.New(slog.DiscardHandler))
 		assert.NoError(t, err)
 
 		op.Increase(true)
@@ -86,12 +87,15 @@ func TestLimiterDo(t *testing.T) {
 		cancel()
 		<-ctx.Done()
 
-		err := op.Sleep(ctx, duration)
+		err := op.Limit(ctx, slog.New(slog.DiscardHandler))
 		assert.EqualError(t, err, "context canceled")
 
 		// No failure => reset to 0
 		op.Increase(false)
-	}
+		assert.Equal(t, 0, l.counterMap["test"])
 
-	assert.Equal(t, 0, l.counterMap["test"])
+		// Min count is 0
+		op.Increase(false)
+		assert.Equal(t, 0, l.counterMap["test"])
+	}
 }
