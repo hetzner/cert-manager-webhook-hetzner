@@ -98,11 +98,11 @@ func (c *Solver) Present(ch *v1alpha1.ChallengeRequest) error {
 		},
 	)
 	if err != nil {
-		return fmt.Errorf("failed to request rrset record addition: %w", err)
+		return c.stabilizeError(err, "failed to request rrset record addition")
 	}
 
 	if err := hClient.Action.WaitFor(ctx, action); err != nil {
-		return fmt.Errorf("failed to add rrset record: %w", err)
+		return c.stabilizeError(err, "failed to add rrset record")
 	}
 
 	return nil
@@ -152,12 +152,17 @@ func (c *Solver) CleanUp(ch *v1alpha1.ChallengeRequest) error {
 			)
 			return nil
 		}
-		return fmt.Errorf("failed to request rrset record deletion: %w", err)
+		return c.stabilizeError(err, "failed to request rrset record deletion")
 	}
 
 	if err := hClient.Action.WaitFor(ctx, action); err != nil {
-		return fmt.Errorf("failed to delete rrset record: %w", err)
+		return c.stabilizeError(err, "failed to delete rrset record")
 	}
 
 	return nil
+}
+
+func (c *Solver) stabilizeError(err error, errMsg string) error {
+	c.logger.Error(errMsg, "err", err)
+	return fmt.Errorf("%s: %w", errMsg, hcloud.StabilizeError(err))
 }
