@@ -99,14 +99,6 @@ func (o *Operation) Limit(ctx context.Context, logger *slog.Logger) error {
 	return nil
 }
 
-func (o *Operation) Update(increase bool) {
+func (o *Operation) Increase(increase bool) {
 	o.limiter.update(o.id, increase)
-}
-
-func (o *Operation) Failed() {
-	o.limiter.update(o.id, true)
-}
-
-func (o *Operation) Succeeded() {
-	o.limiter.update(o.id, false)
 }

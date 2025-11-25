@@ -57,7 +57,7 @@ func TestLimiterDo(t *testing.T) {
 		err := op.Sleep(ctx, duration)
 		assert.NoError(t, err)
 
-		op.Failed()
+		op.Increase(true)
 	}
 
 	assert.Equal(t, 1, l.counterMap["test"])
@@ -70,7 +70,7 @@ func TestLimiterDo(t *testing.T) {
 
 		// Skip sleep
 
-		op.Failed()
+		op.Increase(true)
 	}
 
 	assert.Equal(t, 2, l.counterMap["test"])
@@ -90,7 +90,7 @@ func TestLimiterDo(t *testing.T) {
 		assert.EqualError(t, err, "context canceled")
 
 		// No failure => reset to 0
-		op.Succeeded()
+		op.Increase(false)
 	}
 
 	assert.Equal(t, 0, l.counterMap["test"])

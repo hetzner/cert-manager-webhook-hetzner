@@ -115,7 +115,7 @@ func (c *Solver) Present(ch *v1alpha1.ChallengeRequest) error {
 			TTL:     hcloud.Ptr(TTL),
 		},
 	)
-	op.Update(hcloud.IsError(err,
+	op.Increase(hcloud.IsError(err,
 		hcloud.ErrorCodeNotFound,
 		hcloud.ErrorCodeInvalidInput,
 	))
