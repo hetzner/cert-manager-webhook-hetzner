@@ -6,8 +6,43 @@ on:
   pull_request:
 
 jobs:
+  helm:
+    runs-on: ubuntu-latest
+    name: helm validation ${{ matrix.helm }}
+    strategy:
+      matrix:
+        helm:
+          - v3.19.2 # renovate: datasource=github-releases depname=helm/helm versioning=same-major
+          - v4.0.0 # renovate: datasource=github-releases depname=helm/helm versioning=same-major
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: 3.x
+
+      - uses: yokawasa/action-setup-kube-tools@v0.13.1
+        with:
+          setup-tools: |
+            helm
+          helm: ${{ matrix.helm }}
+
+      - uses: pre-commit/action@v3.0.1
+        with:
+          extra_args: none || true # install pre-commit without running any hooks
+
+      # run with pre-commit to get diff check
+      - name: helm-validation
+        run: |
+          pre-commit run update-helm-snapshots --all
+          pre-commit run update-helm-docs --all
+
   pre-commit:
     runs-on: ubuntu-latest
+    env:
+      # Helm lints are executed in a separate action with a version matrix
+      SKIP: "update-helm-snapshots,update-helm-docs"
     steps:
       - uses: actions/checkout@v6
 
