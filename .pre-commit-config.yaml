@@ -70,6 +70,6 @@ repos:
       - id: shellcheck
 
   - repo: https://github.com/golangci/golangci-lint
-    rev: v2.6.2
+    rev: v2.7.0
     hooks:
       - id: golangci-lint-full
