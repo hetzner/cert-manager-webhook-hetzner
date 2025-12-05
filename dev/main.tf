@@ -36,7 +36,7 @@ module "dev" {
   k3s_channel = var.k3s_channel
 }
 
-resource "kubernetes_namespace" "cert-manager" {
+resource "kubernetes_namespace_v1" "cert-manager" {
   depends_on = [module.dev]
   metadata {
     name = "cert-manager"
@@ -44,7 +44,7 @@ resource "kubernetes_namespace" "cert-manager" {
 }
 
 resource "helm_release" "cert_manager" {
-  depends_on = [kubernetes_namespace.cert-manager]
+  depends_on = [kubernetes_namespace_v1.cert-manager]
   name       = "cert-manager"
   chart      = "cert-manager"
   repository = "https://charts.jetstack.io"
@@ -69,7 +69,7 @@ resource "helm_release" "cert_manager" {
 }
 
 resource "kubernetes_secret_v1" "hetzner_token" {
-  depends_on = [kubernetes_namespace.cert-manager]
+  depends_on = [kubernetes_namespace_v1.cert-manager]
   metadata {
     name      = "hetzner"
     namespace = "cert-manager"
@@ -80,8 +80,8 @@ resource "kubernetes_secret_v1" "hetzner_token" {
   }
 }
 
-resource "kubernetes_config_map" "pebble" {
-  depends_on = [kubernetes_namespace.cert-manager]
+resource "kubernetes_config_map_v1" "pebble" {
+  depends_on = [kubernetes_namespace_v1.cert-manager]
   metadata {
     name      = "pebble"
     namespace = "cert-manager"
@@ -92,8 +92,8 @@ resource "kubernetes_config_map" "pebble" {
   }
 }
 
-resource "kubernetes_service" "pebble" {
-  depends_on = [kubernetes_namespace.cert-manager]
+resource "kubernetes_service_v1" "pebble" {
+  depends_on = [kubernetes_namespace_v1.cert-manager]
   metadata {
     name      = "pebble"
     namespace = "cert-manager"
@@ -115,8 +115,8 @@ resource "kubernetes_service" "pebble" {
   }
 }
 
-resource "kubernetes_deployment" "pebble" {
-  depends_on = [kubernetes_config_map.pebble]
+resource "kubernetes_deployment_v1" "pebble" {
+  depends_on = [kubernetes_config_map_v1.pebble]
   metadata {
     name      = "pebble"
     namespace = "cert-manager"
@@ -178,14 +178,14 @@ resource "kubernetes_deployment" "pebble" {
 }
 
 resource "terraform_data" "pebble-issuer" {
-  depends_on = [helm_release.cert_manager, kubernetes_deployment.pebble]
+  depends_on = [helm_release.cert_manager, kubernetes_deployment_v1.pebble]
   provisioner "local-exec" {
     when    = create
     command = ". ${path.module}/files/env.sh && kubectl apply -f ${path.module}/pebble-issuer.yaml"
   }
 }
 
-resource "kubernetes_namespace" "unbound" {
+resource "kubernetes_namespace_v1" "unbound" {
   count      = var.use_unbound ? 1 : 0
   depends_on = [module.dev]
   metadata {
@@ -193,9 +193,9 @@ resource "kubernetes_namespace" "unbound" {
   }
 }
 
-resource "kubernetes_config_map" "unbound" {
+resource "kubernetes_config_map_v1" "unbound" {
   count      = var.use_unbound ? 1 : 0
-  depends_on = [kubernetes_namespace.unbound]
+  depends_on = [kubernetes_namespace_v1.unbound]
   metadata {
     name      = "unbound"
     namespace = "unbound"
@@ -206,9 +206,9 @@ resource "kubernetes_config_map" "unbound" {
   }
 }
 
-resource "kubernetes_service" "unbound" {
+resource "kubernetes_service_v1" "unbound" {
   count      = var.use_unbound ? 1 : 0
-  depends_on = [kubernetes_namespace.unbound]
+  depends_on = [kubernetes_namespace_v1.unbound]
   metadata {
     name      = "unbound"
     namespace = "unbound"
@@ -230,9 +230,9 @@ resource "kubernetes_service" "unbound" {
   }
 }
 
-resource "kubernetes_deployment" "unbound" {
+resource "kubernetes_deployment_v1" "unbound" {
   count      = var.use_unbound ? 1 : 0
-  depends_on = [kubernetes_config_map.unbound]
+  depends_on = [kubernetes_config_map_v1.unbound]
   metadata {
     name      = "unbound"
     namespace = "unbound"
