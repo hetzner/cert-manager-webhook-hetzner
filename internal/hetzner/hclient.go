@@ -3,6 +3,8 @@ package hetzner
 import (
 	"context"
 	"fmt"
+	"net/http"
+	"time"
 
 	"github.com/prometheus/client_golang/prometheus"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -48,6 +50,7 @@ func NewHClientBuilder(kubeClient kubernetes.Interface, registry prometheus.Regi
 			hcloud.WithToken(string(token)),
 			hcloud.WithInstrumentation(registry),
 			hcloud.WithApplication("cert-manager-webhook-hetzner", version.Version),
+			hcloud.WithHTTPClient(&http.Client{Timeout: 15 * time.Second}),
 		}
 		if config.HCloudEndpoint != "" {
 			clientOpts = append(clientOpts, hcloud.WithEndpoint(config.HCloudEndpoint))
