@@ -1,5 +1,11 @@
 # Changelog
 
+## [v0.6.3](https://github.com/hetzner/cert-manager-webhook-hetzner/releases/tag/v0.6.3)
+
+### Bug Fixes
+
+- set API http client timeout to 15s (#91)
+
 ## [v0.6.2](https://github.com/hetzner/cert-manager-webhook-hetzner/releases/tag/v0.6.2)
 
 ### Bug Fixes
