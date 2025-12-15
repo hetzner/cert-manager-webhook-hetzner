@@ -1,4 +1,4 @@
 apiVersion: v1
 description: cert-manager ACME webhook for Hetzner
 name: cert-manager-webhook-hetzner
-version: 0.6.2 # x-releaser-pleaser-version
+version: 0.6.3 # x-releaser-pleaser-version
