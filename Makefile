@@ -1,5 +1,5 @@
 SHELL = bash
-KUBERNETES_VERSION ?= 1.34.1 # renovate: datasource=github-releases depName=kubernetes-sigs/controller-tools extractVersion=^envtest-v(?<version>.+)$
+KUBERNETES_VERSION ?= 1.35.0 # renovate: datasource=github-releases depName=kubernetes-sigs/controller-tools extractVersion=^envtest-v(?<version>.+)$
 
 # Override PATH so that the cert-manager test environment detects the required binaries.
 testdata/env:
