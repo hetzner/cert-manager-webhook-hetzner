@@ -1,5 +1,11 @@
 # Changelog
 
+## [v0.6.4](https://github.com/hetzner/cert-manager-webhook-hetzner/releases/tag/v0.6.4)
+
+### Bug Fixes
+
+- add challenge details to log messages (#101)
+
 ## [v0.6.3](https://github.com/hetzner/cert-manager-webhook-hetzner/releases/tag/v0.6.3)
 
 ### Bug Fixes
