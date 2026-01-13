@@ -69,6 +69,12 @@ func (c *Solver) Initialize(kubeClientConfig *rest.Config, _ <-chan struct{}) er
 func (c *Solver) Present(ch *v1alpha1.ChallengeRequest) error {
 	ctx := context.Background()
 
+	logger := c.logger.With(
+		"dns-name", ch.DNSName,
+		"resolved-fqdn", ch.ResolvedFQDN,
+		"resolved-zone", ch.ResolvedZone,
+	)
+
 	cfg, err := LoadConfig(ch.Config)
 	if err != nil {
 		return err
@@ -84,11 +90,12 @@ func (c *Solver) Present(ch *v1alpha1.ChallengeRequest) error {
 		return fmt.Errorf("error building zone and zone rrset: %w", err)
 	}
 
-	c.logger.Info(
-		"creating DNS TXT record",
+	logger = logger.With(
 		"zone-name", zoneRRSet.Zone.Name,
 		"zone-rrset-name", zoneRRSet.Name,
 	)
+
+	logger.Info("creating DNS TXT record")
 
 	action, _, err := hClient.Zone.AddRRSetRecords(ctx,
 		zoneRRSet,
@@ -98,11 +105,11 @@ func (c *Solver) Present(ch *v1alpha1.ChallengeRequest) error {
 		},
 	)
 	if err != nil {
-		return c.stabilizeError(err, "failed to request rrset record addition")
+		return c.stabilizeError(logger, "failed to request rrset record addition", err)
 	}
 
 	if err := hClient.Action.WaitFor(ctx, action); err != nil {
-		return c.stabilizeError(err, "failed to add rrset record")
+		return c.stabilizeError(logger, "failed to add rrset record", err)
 	}
 
 	return nil
@@ -116,6 +123,12 @@ func (c *Solver) Present(ch *v1alpha1.ChallengeRequest) error {
 func (c *Solver) CleanUp(ch *v1alpha1.ChallengeRequest) error {
 	ctx := context.Background()
 
+	logger := c.logger.With(
+		"dns-name", ch.DNSName,
+		"resolved-fqdn", ch.ResolvedFQDN,
+		"resolved-zone", ch.ResolvedZone,
+	)
+
 	cfg, err := LoadConfig(ch.Config)
 	if err != nil {
 		return err
@@ -131,11 +144,12 @@ func (c *Solver) CleanUp(ch *v1alpha1.ChallengeRequest) error {
 		return fmt.Errorf("error building zone and zone rrset: %w", err)
 	}
 
-	c.logger.Info(
-		"removing DNS TXT record",
+	logger = logger.With(
 		"zone-name", zoneRRSet.Zone.Name,
 		"zone-rrset-name", zoneRRSet.Name,
 	)
+
+	logger.Info("removing DNS TXT record")
 
 	action, _, err := hClient.Zone.RemoveRRSetRecords(ctx,
 		zoneRRSet,
@@ -145,24 +159,20 @@ func (c *Solver) CleanUp(ch *v1alpha1.ChallengeRequest) error {
 	)
 	if err != nil {
 		if hcloud.IsError(err, hcloud.ErrorCodeNotFound) {
-			c.logger.Info(
-				"zone rrset has already been deleted",
-				"zone-name", zoneRRSet.Zone.Name,
-				"zone-rrset-name", zoneRRSet.Name,
-			)
+			logger.Info("zone rrset has already been deleted")
 			return nil
 		}
-		return c.stabilizeError(err, "failed to request rrset record deletion")
+		return c.stabilizeError(logger, "failed to request rrset record deletion", err)
 	}
 
 	if err := hClient.Action.WaitFor(ctx, action); err != nil {
-		return c.stabilizeError(err, "failed to delete rrset record")
+		return c.stabilizeError(logger, "failed to delete rrset record", err)
 	}
 
 	return nil
 }
 
-func (c *Solver) stabilizeError(err error, errMsg string) error {
-	c.logger.Error(errMsg, "err", err)
-	return fmt.Errorf("%s: %w", errMsg, hcloud.StabilizeError(err))
+func (c *Solver) stabilizeError(logger *slog.Logger, msg string, err error) error {
+	logger.Error(msg, "err", err)
+	return fmt.Errorf("%s: %w", msg, hcloud.StabilizeError(err))
 }
