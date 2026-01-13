@@ -15,6 +15,7 @@ import (
 	"github.com/hetznercloud/hcloud-go/v2/hcloud"
 	"github.com/hetznercloud/hcloud-go/v2/hcloud/exp/kit/randutil"
 	"github.com/hetznercloud/hcloud-go/v2/hcloud/exp/mockutil"
+	"github.com/hetznercloud/hcloud-go/v2/hcloud/exp/zoneutil"
 )
 
 func TestPresent(t *testing.T) {
@@ -60,7 +61,7 @@ func TestPresent(t *testing.T) {
 						body, err := io.ReadAll(r.Body)
 						require.NoError(t, err)
 						assert.JSONEq(t,
-							fmt.Sprintf(`{"records": [{ "value": %q }], "ttl": 300}`, fmt.Sprintf("%q", key)),
+							fmt.Sprintf(`{"records": [{ "value": %q }], "ttl": 300}`, zoneutil.FormatTXTRecord(key)),
 							string(body),
 						)
 					},
@@ -127,7 +128,7 @@ func TestCleanup(t *testing.T) {
 						body, err := io.ReadAll(r.Body)
 						require.NoError(t, err)
 						assert.JSONEq(t,
-							fmt.Sprintf(`{"records": [{ "value": %q }]}`, fmt.Sprintf("%q", key)),
+							fmt.Sprintf(`{"records": [{ "value": %q }]}`, zoneutil.FormatTXTRecord(key)),
 							string(body),
 						)
 					},

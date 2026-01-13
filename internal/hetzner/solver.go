@@ -154,7 +154,7 @@ func (c *Solver) CleanUp(ch *v1alpha1.ChallengeRequest) error {
 	action, _, err := hClient.Zone.RemoveRRSetRecords(ctx,
 		zoneRRSet,
 		hcloud.ZoneRRSetRemoveRecordsOpts{
-			Records: []hcloud.ZoneRRSetRecord{{Value: fmt.Sprintf("%q", ch.Key)}},
+			Records: []hcloud.ZoneRRSetRecord{{Value: zoneutil.FormatTXTRecord(ch.Key)}},
 		},
 	)
 	if err != nil {
