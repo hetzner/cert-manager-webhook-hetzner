@@ -1,5 +1,11 @@
 # Changelog
 
+## [v0.6.5](https://github.com/hetzner/cert-manager-webhook-hetzner/releases/tag/v0.6.5)
+
+### Bug Fixes
+
+- revert update kubernetes packages to v0.35.0 (#94) (#105)
+
 ## [v0.6.4](https://github.com/hetzner/cert-manager-webhook-hetzner/releases/tag/v0.6.4)
 
 ### Bug Fixes
