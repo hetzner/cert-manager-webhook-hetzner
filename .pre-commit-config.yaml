@@ -52,7 +52,7 @@ repos:
     hooks:
       - id: prettier
         files: \.(md|ya?ml|json)$
-        exclude: ^(chart/templates/.*|chart/README\.md)$
+        exclude: ^(chart/templates/.*|chart/README\.md|chart/\.snapshots/.*)$
 
   - repo: local
     hooks:
