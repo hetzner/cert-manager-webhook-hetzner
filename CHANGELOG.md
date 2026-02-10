@@ -1,5 +1,11 @@
 # Changelog
 
+## [v0.6.6](https://github.com/hetzner/cert-manager-webhook-hetzner/releases/tag/v0.6.6)
+
+### Bug Fixes
+
+- **helm**: change toYamlPretty to toYaml for wider compatibility (#113)
+
 ## [v0.6.5](https://github.com/hetzner/cert-manager-webhook-hetzner/releases/tag/v0.6.5)
 
 ### Bug Fixes
