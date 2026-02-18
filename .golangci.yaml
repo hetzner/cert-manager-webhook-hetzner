@@ -63,6 +63,11 @@ linters:
       replace-allow-list:
         - github.com/hetznercloud/hcloud-go/v2
 
+    revive:
+      rules:
+        - name: var-naming
+          arguments: [[], [], [{ skipPackageNameCollisionWithGoStd: true }]]
+
   exclusions:
     generated: lax
     presets:
