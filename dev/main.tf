@@ -154,7 +154,7 @@ resource "kubernetes_deployment_v1" "pebble" {
 
         container {
           name  = "pebble"
-          image = "ghcr.io/letsencrypt/pebble:2.9.0" # renovate: datasource=docker depName=ghcr.io/letsencrypt/pebble
+          image = "ghcr.io/letsencrypt/pebble:2.10.0" # renovate: datasource=docker depName=ghcr.io/letsencrypt/pebble
           args  = local.pebble_args
 
           port {
