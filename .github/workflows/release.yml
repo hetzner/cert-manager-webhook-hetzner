@@ -31,7 +31,7 @@ jobs:
           git config --global user.email github-bot@hetzner-cloud.de
 
       - name: Run GoReleaser
-        uses: goreleaser/goreleaser-action@v6
+        uses: goreleaser/goreleaser-action@v7
         with:
           version: "2.x"
           args: release --clean
