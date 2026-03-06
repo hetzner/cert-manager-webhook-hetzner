@@ -43,7 +43,7 @@ func main() {
 	go func() {
 		logger.Info("starting metrics server", "addr", server.Addr)
 		err := server.ListenAndServe()
-		if err != nil && errors.Is(err, http.ErrServerClosed) {
+		if err != nil && !errors.Is(err, http.ErrServerClosed) {
 			logger.Error(err.Error())
 			os.Exit(1)
 		}
