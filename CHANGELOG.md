@@ -1,5 +1,11 @@
 # Changelog
 
+## [v0.6.7](https://github.com/hetzner/cert-manager-webhook-hetzner/releases/tag/v0.6.7)
+
+### Bug Fixes
+
+- handle ErrServerClosed gracefully (#131)
+
 ## [v0.6.6](https://github.com/hetzner/cert-manager-webhook-hetzner/releases/tag/v0.6.6)
 
 ### Bug Fixes
