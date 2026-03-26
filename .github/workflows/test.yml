@@ -48,6 +48,6 @@ jobs:
         if: >
           !startswith(github.head_ref, 'renovate/') &&
           !startswith(github.head_ref, 'releaser-pleaser--')
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@v6
         with:
           token: ${{ secrets.codecov_token }}
