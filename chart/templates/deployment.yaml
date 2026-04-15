@@ -82,6 +82,9 @@ spec:
             - name: certs
               mountPath: /tls
               readOnly: true
+            {{- with .Values.extraVolumeMounts }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
           {{- with .Values.containerSecurityContext }}
           securityContext: {{- toYaml . | nindent 12 }}
           {{- end }}
@@ -91,6 +94,9 @@ spec:
         - name: certs
           secret:
             secretName: {{ include "cert-manager-webhook-hetzner.servingCertificate" . }}
+        {{- with .Values.extraVolumes }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{ toYaml . | nindent 8 }}

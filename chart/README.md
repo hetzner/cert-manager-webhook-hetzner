@@ -12,6 +12,8 @@ cert-manager ACME webhook for Hetzner
 | certManager.serviceAccountName | string | `"cert-manager"` | Name of the cert-managers service account. |
 | containerSecurityContext | object | [Restricted](https://kubernetes.io/docs/concepts/security/pod-security-standards/#restricted) | [Kubernetes container security context](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-container) for the webhook. |
 | env | object | `{}` | Additional environment variables, where each key represents the name of the variable. The value follows standard Kubernetes environment variable formats. |
+| extraVolumeMounts | list | `[]` | Additional volume mounts to add to the container. |
+| extraVolumes | list | `[]` | Additional [volumes](https://kubernetes.io/docs/concepts/storage/volumes/) to add to the pod. |
 | fullnameOverride | string | `""` | Override the full name of the chart. |
 | groupName | string | `"acme.hetzner.com"` | The GroupName here is used to identify your company or business unit that created this webhook. For example, this may be "acme.mycompany.com". This name will need to be referenced in each Issuer's `webhook` stanza to inform cert-manager of where to send ChallengePayload resources in order to solve the DNS01 challenge. This group name should be **unique**, hence using your own company's domain here is recommended. |
 | image.pullPolicy | string | `"IfNotPresent"` | Pull policy of the webhook image. |
