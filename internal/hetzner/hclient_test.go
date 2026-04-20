@@ -2,7 +2,7 @@ package hetzner
 
 import (
 	"context"
-	"fmt"
+	"io/fs"
 	"os"
 	"path/filepath"
 	"strings"
@@ -79,7 +79,8 @@ hcloud_api_requests_total{api_endpoint="/locations",code="401",method="get"} 1
 
 		builder := NewHClientBuilder(fake.NewClientset(), prometheus.NewRegistry())
 		_, err := builder(t.Context(), "default", config)
-		require.EqualError(t, err, fmt.Sprintf("error reading hetzner token file: open %s: no such file or directory", tokenPath))
+		require.ErrorContains(t, err, "error reading hetzner token file")
+		require.ErrorIs(t, err, fs.ErrNotExist)
 	})
 
 	t.Run("TokenFileEmpty", func(t *testing.T) {
@@ -92,12 +93,23 @@ hcloud_api_requests_total{api_endpoint="/locations",code="401",method="get"} 1
 
 		builder := NewHClientBuilder(fake.NewClientset(), prometheus.NewRegistry())
 		_, err := builder(t.Context(), "default", config)
-		require.EqualError(t, err, "hetzner token not provided (set tokenSecretKeyRef or tokenFilePath)")
+		require.EqualError(t, err, "hetzner token is empty")
 	})
 
 	t.Run("NoTokenConfigured", func(t *testing.T) {
 		builder := NewHClientBuilder(fake.NewClientset(), prometheus.NewRegistry())
 		_, err := builder(t.Context(), "default", Config{})
 		require.EqualError(t, err, "hetzner token not provided (set tokenSecretKeyRef or tokenFilePath)")
+	})
+
+	t.Run("BothTokenSourcesConfigured", func(t *testing.T) {
+		config := Config{
+			HetznerTokenSecret:   SecretKeyRef{Name: "hcloud", Key: "token"},
+			HetznerTokenFilePath: "/tmp/hetzner",
+		}
+
+		builder := NewHClientBuilder(fake.NewClientset(), prometheus.NewRegistry())
+		_, err := builder(t.Context(), "default", config)
+		require.EqualError(t, err, "hetzner token is ambiguous: set either tokenSecretKeyRef or tokenFilePath, not both")
 	})
 }

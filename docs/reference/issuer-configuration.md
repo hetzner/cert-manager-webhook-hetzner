@@ -50,9 +50,9 @@ The webhook is responsible for one or more issuers, each with its own configurat
         <td></td>
         <td>
             Path to a file containing the Hetzner Cloud API token, mounted into
-            the webhook pod. Alternative to <code>config.tokenSecretKeyRef</code>;
-            if both are set, <code>tokenSecretKeyRef</code> takes precedence.
-            Trailing whitespace in the file is trimmed.
+            the webhook pod. Mutually exclusive with <code>config.tokenSecretKeyRef</code>;
+            setting both is an error. Leading and trailing whitespace in the file
+            is trimmed.
         </td>
     </tr>
 </table>
