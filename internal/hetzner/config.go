@@ -13,8 +13,9 @@ import (
 // issuer. This typically includes references to Secret resources containing DNS
 // provider credentials, in cases where a 'multi-tenant' DNS solver is being created.
 type Config struct {
-	HetznerTokenSecret SecretKeyRef `json:"tokenSecretKeyRef"`
-	HCloudEndpoint     string       `json:"hcloudEndpoint"`
+	HetznerTokenSecret   SecretKeyRef `json:"tokenSecretKeyRef"`
+	HetznerTokenFilePath string       `json:"tokenFilePath"`
+	HCloudEndpoint       string       `json:"hcloudEndpoint"`
 }
 
 type SecretKeyRef struct {

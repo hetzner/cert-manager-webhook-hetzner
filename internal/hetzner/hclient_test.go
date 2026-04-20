@@ -2,6 +2,9 @@ package hetzner
 
 import (
 	"context"
+	"fmt"
+	"os"
+	"path/filepath"
 	"strings"
 	"testing"
 
@@ -25,7 +28,7 @@ func TestBuildClient(t *testing.T) {
 				Namespace: namespace,
 			},
 			Data: map[string][]byte{
-				"token": {},
+				"token": []byte("test-token"),
 			},
 		}
 
@@ -52,5 +55,49 @@ hcloud_api_requests_total{api_endpoint="/locations",code="401",method="get"} 1
 `),
 			"hcloud_api_requests_total",
 		))
+	})
+
+	t.Run("TokenFromFile", func(t *testing.T) {
+		tokenPath := filepath.Join(t.TempDir(), "token")
+		require.NoError(t, os.WriteFile(tokenPath, []byte("file-token\n"), 0o600))
+
+		config := Config{
+			HetznerTokenFilePath: tokenPath,
+		}
+
+		builder := NewHClientBuilder(fake.NewClientset(), prometheus.NewRegistry())
+		client, err := builder(t.Context(), "default", config)
+		require.NoError(t, err)
+		require.NotNil(t, client)
+	})
+
+	t.Run("TokenFileMissing", func(t *testing.T) {
+		tokenPath := filepath.Join(t.TempDir(), "does-not-exist")
+		config := Config{
+			HetznerTokenFilePath: tokenPath,
+		}
+
+		builder := NewHClientBuilder(fake.NewClientset(), prometheus.NewRegistry())
+		_, err := builder(t.Context(), "default", config)
+		require.EqualError(t, err, fmt.Sprintf("error reading hetzner token file: open %s: no such file or directory", tokenPath))
+	})
+
+	t.Run("TokenFileEmpty", func(t *testing.T) {
+		tokenPath := filepath.Join(t.TempDir(), "token")
+		require.NoError(t, os.WriteFile(tokenPath, []byte("   \n"), 0o600))
+
+		config := Config{
+			HetznerTokenFilePath: tokenPath,
+		}
+
+		builder := NewHClientBuilder(fake.NewClientset(), prometheus.NewRegistry())
+		_, err := builder(t.Context(), "default", config)
+		require.EqualError(t, err, "hetzner token not provided (set tokenSecretKeyRef or tokenFilePath)")
+	})
+
+	t.Run("NoTokenConfigured", func(t *testing.T) {
+		builder := NewHClientBuilder(fake.NewClientset(), prometheus.NewRegistry())
+		_, err := builder(t.Context(), "default", Config{})
+		require.EqualError(t, err, "hetzner token not provided (set tokenSecretKeyRef or tokenFilePath)")
 	})
 }

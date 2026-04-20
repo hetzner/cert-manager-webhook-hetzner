@@ -1,9 +1,11 @@
 package hetzner
 
 import (
+	"bytes"
 	"context"
 	"fmt"
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/prometheus/client_golang/prometheus"
@@ -27,23 +29,39 @@ func NewHClientBuilder(kubeClient kubernetes.Interface, registry prometheus.Regi
 		namespace string,
 		config Config,
 	) (*hcloud.Client, error) {
-		secret, err := kubeClient.CoreV1().Secrets(namespace).Get(
-			ctx,
-			config.HetznerTokenSecret.Name,
-			v1.GetOptions{},
-		)
-		if err != nil {
-			return nil, err
+		var token []byte
+
+		if config.HetznerTokenSecret.Name != "" {
+			secret, err := kubeClient.CoreV1().Secrets(namespace).Get(
+				ctx,
+				config.HetznerTokenSecret.Name,
+				v1.GetOptions{},
+			)
+			if err != nil {
+				return nil, err
+			}
+
+			var ok bool
+			token, ok = secret.Data[config.HetznerTokenSecret.Key]
+			if !ok {
+				return nil, fmt.Errorf(
+					"secret %s in namespace %s does not contain key %s",
+					config.HetznerTokenSecret.Name,
+					namespace,
+					config.HetznerTokenSecret.Key,
+				)
+			}
+		} else if config.HetznerTokenFilePath != "" {
+			data, err := os.ReadFile(config.HetznerTokenFilePath)
+			if err != nil {
+				return nil, fmt.Errorf("error reading hetzner token file: %w", err)
+			}
+			token = data
 		}
 
-		token, ok := secret.Data[config.HetznerTokenSecret.Key]
-		if !ok {
-			return nil, fmt.Errorf(
-				"secret %s in namespace %s does not contain key %s",
-				config.HetznerTokenSecret.Name,
-				namespace,
-				config.HetznerTokenSecret.Key,
-			)
+		token = bytes.TrimSpace(token)
+		if len(token) == 0 {
+			return nil, fmt.Errorf("hetzner token not provided (set tokenSecretKeyRef or tokenFilePath)")
 		}
 
 		clientOpts := []hcloud.ClientOption{

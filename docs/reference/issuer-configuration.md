@@ -28,19 +28,36 @@ The webhook is responsible for one or more issuers, each with its own configurat
     </tr>
     <tr>
         <td><code>config.tokenSecretKeyRef.name</code></td>
-        <td>string (<strong>Required</strong>)</td>
+        <td>string</td>
         <td></td>
-        <td>Name of the Kubernetes secret, which stores the Hetzner Cloud API token.</td>
+        <td>
+            Name of the Kubernetes secret, which stores the Hetzner Cloud API token.
+            Required unless <code>config.tokenFilePath</code> is set.
+        </td>
     </tr>
     <tr>
         <td><code>config.tokenSecretKeyRef.key</code></td>
-        <td>string (<strong>Required</strong>)</td>
+        <td>string</td>
         <td></td>
-        <td>Key in the Kubernetes secret, which stores the Hetzner Cloud API token.</td>
+        <td>
+            Key in the Kubernetes secret, which stores the Hetzner Cloud API token.
+            Required unless <code>config.tokenFilePath</code> is set.
+        </td>
+    </tr>
+    <tr>
+        <td><code>config.tokenFilePath</code></td>
+        <td>string</td>
+        <td></td>
+        <td>
+            Path to a file containing the Hetzner Cloud API token, mounted into
+            the webhook pod. Alternative to <code>config.tokenSecretKeyRef</code>;
+            if both are set, <code>tokenSecretKeyRef</code> takes precedence.
+            Trailing whitespace in the file is trimmed.
+        </td>
     </tr>
 </table>
 
-### Example
+### Example: token from Kubernetes secret
 
 ```yaml
 # issuer.yaml
@@ -54,4 +71,22 @@ solvers:
           tokenSecretKeyRef:
             name: hetzner
             key: token
+```
+
+### Example: token from mounted file
+
+Mount the token into the webhook pod (for example via the chart's
+`extraVolumes` / `extraVolumeMounts` values, a projected volume, or a CSI
+secret driver) and reference its path in the issuer config:
+
+```yaml
+# issuer.yaml
+# [...]
+solvers:
+  - dns01:
+      webhook:
+        groupName: acme.hetzner.com
+        solverName: hetzner
+        config:
+          tokenFilePath: /var/run/secrets/hetzner/token
 ```
