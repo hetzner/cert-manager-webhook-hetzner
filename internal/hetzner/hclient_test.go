@@ -57,6 +57,33 @@ hcloud_api_requests_total{api_endpoint="/locations",code="401",method="get"} 1
 		))
 	})
 
+	t.Run("SecretMissingKey", func(t *testing.T) {
+		namespace := "default"
+
+		secret := &v1.Secret{
+			ObjectMeta: metav1.ObjectMeta{
+				Name:      "hcloud",
+				Namespace: namespace,
+			},
+			Data: map[string][]byte{
+				"other-key": []byte("test-token"),
+			},
+		}
+
+		kubeClientSet := fake.NewClientset(secret)
+
+		config := Config{
+			HetznerTokenSecret: SecretKeyRef{
+				Name: "hcloud",
+				Key:  "token",
+			},
+		}
+
+		builder := NewHClientBuilder(kubeClientSet, prometheus.NewRegistry())
+		_, err := builder(t.Context(), namespace, config)
+		require.EqualError(t, err, "secret hcloud in namespace default does not contain key token")
+	})
+
 	t.Run("TokenFromFile", func(t *testing.T) {
 		tokenPath := filepath.Join(t.TempDir(), "token")
 		require.NoError(t, os.WriteFile(tokenPath, []byte("file-token\n"), 0o600))
