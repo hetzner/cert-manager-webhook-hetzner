@@ -52,7 +52,7 @@ The webhook is responsible for one or more issuers, each with its own configurat
             Path to a file containing the Hetzner Cloud API token, mounted into
             the webhook pod. Mutually exclusive with <code>config.tokenSecretKeyRef</code>;
             setting both is an error. Leading and trailing whitespace in the file
-            is trimmed.
+            are trimmed.
         </td>
     </tr>
 </table>
