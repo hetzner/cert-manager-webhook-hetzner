@@ -39,7 +39,7 @@ func NewHClientBuilder(kubeClient kubernetes.Interface, registry prometheus.Regi
 
 		switch {
 		case secretConfigured && fileConfigured:
-			return nil, errors.New("hetzner token is ambiguous: set either tokenSecretKeyRef or tokenFilePath, not both")
+			return nil, errors.New("hetzner token provided in both tokenSecretKeyRef and tokenFilePath")
 		case secretConfigured:
 			token, err = loadTokenFromSecret(ctx, kubeClient, namespace, config.HetznerTokenSecret)
 		case fileConfigured:
