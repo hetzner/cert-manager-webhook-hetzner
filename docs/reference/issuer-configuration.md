@@ -41,7 +41,8 @@ The webhook is responsible for one or more issuers, each with its own configurat
         <td></td>
         <td>
             Key in the Kubernetes secret, which stores the Hetzner Cloud API token.
-            Required unless <code>config.tokenFilePath</code> is set.
+            Required unless <code>config.tokenFilePath</code> is set. Leading and
+            trailing whitespace in the token are trimmed.
         </td>
     </tr>
     <tr>
