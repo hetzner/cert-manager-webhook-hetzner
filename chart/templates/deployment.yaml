@@ -46,6 +46,9 @@ spec:
       securityContext: {{- toYaml . | nindent 8 }}
       {{- end }}
       serviceAccountName: {{ include "cert-manager-webhook-hetzner.fullname" . }}
+      {{- if .Values.priorityClassName }}
+      priorityClassName: {{ .Values.priorityClassName }}
+      {{- end }}
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}" # x-releaser-pleaser-version
