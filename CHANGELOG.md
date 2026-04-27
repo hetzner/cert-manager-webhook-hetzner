@@ -1,5 +1,13 @@
 # Changelog
 
+## [v0.7.0](https://github.com/hetzner/cert-manager-webhook-hetzner/releases/tag/v0.7.0)
+
+### Features
+
+- **helm**: configurable extra volume mounts (#152)
+- configure hetzner token from file path (#156)
+- **helm**: add priorityClassName to chart (#162)
+
 ## [v0.6.7](https://github.com/hetzner/cert-manager-webhook-hetzner/releases/tag/v0.6.7)
 
 ### Bug Fixes
