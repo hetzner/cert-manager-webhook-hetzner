@@ -137,6 +137,6 @@ hcloud_api_requests_total{api_endpoint="/locations",code="401",method="get"} 1
 
 		builder := NewHClientBuilder(fake.NewClientset(), prometheus.NewRegistry())
 		_, err := builder(t.Context(), "default", config)
-		require.EqualError(t, err, "hetzner token is ambiguous: set either tokenSecretKeyRef or tokenFilePath, not both")
+		require.EqualError(t, err, "hetzner token provided in both tokenSecretKeyRef and tokenFilePath")
 	})
 }
