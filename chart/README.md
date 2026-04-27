@@ -28,6 +28,7 @@ cert-manager ACME webhook for Hetzner
 | podDisruptionBudget | object | `{"enabled":false}` | [Kubernetes pod disruption budget](https://kubernetes.io/docs/tasks/run-application/configure-pdb/) |
 | podLabels | object | `{}` | [Kubernetes labels](https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/) added to the pod metadata |
 | podSecurityContext | object | [Restricted](https://kubernetes.io/docs/concepts/security/pod-security-standards/#restricted) | [Kubernetes pod security context](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod) for the webhook. |
+| priorityClassName | string | `""` | PriorityClassName of the application pods |
 | replicaCount | int | `1` | Number of replicas. |
 | resources | object | `{}` | [Kubernetes resource management](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/) for the webhook |
 | service.port | int | `443` | Port of the webhook service. |
