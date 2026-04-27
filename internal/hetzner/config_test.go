@@ -20,6 +20,7 @@ func TestLoadConfig(t *testing.T) {
 			name: "valid",
 			raw: `{
 				"hcloudEndpoint": "https://changed.com/v2",
+				"tokenFilePath": "/tmp/hetzner",
 				"tokenSecretKeyRef": {
 					"name": "hetzner",
 					"key": "token"
@@ -30,7 +31,8 @@ func TestLoadConfig(t *testing.T) {
 					Name: "hetzner",
 					Key:  "token",
 				},
-				HCloudEndpoint: "https://changed.com/v2",
+				HetznerTokenFilePath: "/tmp/hetzner",
+				HCloudEndpoint:       "https://changed.com/v2",
 			},
 		},
 		{
