@@ -26,13 +26,13 @@ jobs:
       KUBERNETES_VERSION: ${{ matrix.k8s }}
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
 
-      - uses: actions/setup-go@v6
+      - uses: actions/setup-go@4a3601121dd01d1626a1e23e37211e3254c1c06c # v6
         with:
           go-version-file: go.mod
 
-      - uses: hetznercloud/tps-action@main
+      - uses: hetznercloud/tps-action@dc6d67c5768ca43b840429b6c7409cda61cf4092 # main
 
       - name: Install test tools
         run: |
@@ -48,6 +48,6 @@ jobs:
         if: >
           !startswith(github.head_ref, 'renovate/') &&
           !startswith(github.head_ref, 'releaser-pleaser--')
-        uses: codecov/codecov-action@v6
+        uses: codecov/codecov-action@e79a6962e0d4c0c17b229090214935d2e33f8354 # v6
         with:
           token: ${{ secrets.codecov_token }}
