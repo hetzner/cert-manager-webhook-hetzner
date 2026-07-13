@@ -1,5 +1,17 @@
 # Changelog
 
+## [v0.8.0](https://github.com/hetzner/cert-manager-webhook-hetzner/releases/tag/v0.8.0)
+
+### Features
+
+- support cert-manager v1.21
+- support Kubernetes v1.36
+
+### Chores
+
+- drop support for Kubernetes v1.32
+- drop support for Kubernetes v1.33
+
 ## [v0.7.0](https://github.com/hetzner/cert-manager-webhook-hetzner/releases/tag/v0.7.0)
 
 ### Features
