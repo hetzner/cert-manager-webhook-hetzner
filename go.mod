@@ -6,7 +6,7 @@ toolchain go1.26.5
 
 require (
 	github.com/cert-manager/cert-manager v1.21.0
-	github.com/hetznercloud/hcloud-go/v2 v2.44.0
+	github.com/hetznercloud/hcloud-go/v2 v2.45.0
 	github.com/prometheus/client_golang v1.23.2
 	github.com/stretchr/testify v1.11.1
 	golang.org/x/net v0.57.0
