@@ -1,43 +1,42 @@
 locals {
-  kubeconfig_path     = abspath("${path.root}/files/kubeconfig.yaml")
-  pebble_config_path  = abspath("${path.module}/pebble-config.json")
-  unbound_config_path = abspath("${path.module}/unbound.conf")
+  kubeconfig_path     = data.terraform_remote_state.infra.outputs.kubeconfig_filename
+  pebble_config_path  = abspath("${path.root}/../pebble-config.json")
+  unbound_config_path = abspath("${path.root}/../unbound.conf")
 
   pebble_args_base = ["-config=/pebble-config.json"]
   pebble_args      = var.use_unbound ? concat(local.pebble_args_base, ["-dnsserver=unbound.unbound.svc.cluster.local:53"]) : local.pebble_args_base
 }
 
-data "local_sensitive_file" "kubeconfig" {
-  depends_on = [module.dev]
-  filename   = local.kubeconfig_path
+# The cluster itself is managed in the infra state, which must be applied first.
+data "terraform_remote_state" "infra" {
+  backend = "local"
+
+  config = {
+    path = abspath("${path.root}/../infra/terraform.tfstate")
+  }
 }
 
 data "local_file" "pebble_config" {
   filename = local.pebble_config_path
 }
 
-provider "helm" {
-  kubernetes = {
-    config_path = data.local_sensitive_file.kubeconfig.filename
-  }
-}
+module "k8s" {
+  source = "github.com/hetznercloud/kubernetes-dev-env//modules/k8s?ref=v0.11.0"
 
-provider "kubernetes" {
-  config_path = data.local_sensitive_file.kubeconfig.filename
-}
-
-module "dev" {
-  source = "github.com/hetznercloud/kubernetes-dev-env?ref=v0.10.2"
-
-  name         = "cert-manager-webhook-${replace(var.name, "/[^a-zA-Z0-9-_]/", "-")}"
   hcloud_token = var.hetzner_token
-  worker_count = 0
 
-  k3s_channel = var.k3s_channel
+  kubeconfig_path     = data.terraform_remote_state.infra.outputs.kubeconfig_filename
+  hcloud_network_id   = data.terraform_remote_state.infra.outputs.network_id
+  cluster_cidr        = data.terraform_remote_state.infra.outputs.cluster_cidr
+  use_cloud_routes    = data.terraform_remote_state.infra.outputs.use_cloud_routes
+  registry_service_ip = data.terraform_remote_state.infra.outputs.registry_service_ip
+
+  # Share the generated files with the infra state
+  output_dir = abspath("${path.root}/../files")
 }
 
 resource "kubernetes_namespace_v1" "cert-manager" {
-  depends_on = [module.dev]
+  depends_on = [module.k8s]
   metadata {
     name = "cert-manager"
   }
@@ -64,7 +63,7 @@ resource "helm_release" "cert_manager" {
 
   provisioner "local-exec" {
     when    = destroy
-    command = ". files/env.sh && kubectl delete apiservices.apiregistration.k8s.io v1alpha1.acme.hetzner.com || true"
+    command = ". ${path.module}/../files/env.sh && kubectl delete apiservices.apiregistration.k8s.io v1alpha1.acme.hetzner.com || true"
   }
 }
 
@@ -181,13 +180,13 @@ resource "terraform_data" "pebble-issuer" {
   depends_on = [helm_release.cert_manager, kubernetes_deployment_v1.pebble]
   provisioner "local-exec" {
     when    = create
-    command = ". ${path.module}/files/env.sh && kubectl apply -f ${path.module}/pebble-issuer.yaml"
+    command = ". ${path.module}/../files/env.sh && kubectl apply -f ${path.module}/../pebble-issuer.yaml"
   }
 }
 
 resource "kubernetes_namespace_v1" "unbound" {
   count      = var.use_unbound ? 1 : 0
-  depends_on = [module.dev]
+  depends_on = [module.k8s]
   metadata {
     name = "unbound"
   }
