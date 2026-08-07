@@ -56,6 +56,18 @@ The webhook is responsible for one or more issuers, each with its own configurat
             are trimmed.
         </td>
     </tr>
+    <tr>
+        <td><code>config.httpTimeout</code></td>
+        <td>string</td>
+        <td><code>15s</code></td>
+        <td>
+            Per-request timeout for calls to the Hetzner Cloud API, as a
+            <a href="https://pkg.go.dev/time#ParseDuration">Go duration string</a>
+            (e.g. <code>45s</code>, <code>1m</code>). Increase this if DNS record
+            creation/deletion intermittently fails with a timeout error, e.g. because
+            the Zones API is slower to respond than usual in your environment.
+        </td>
+    </tr>
 </table>
 
 ### Example: token from Kubernetes secret
