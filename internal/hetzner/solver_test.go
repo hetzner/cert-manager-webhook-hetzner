@@ -19,70 +19,109 @@ import (
 )
 
 func TestPresent(t *testing.T) {
-	testCases := []struct {
-		name       string
-		zoneNameFn func(id string) string
-	}{
-		{
-			name:       "success",
-			zoneNameFn: func(id string) string { return fmt.Sprintf("example-%s.com", id) },
-		},
-	}
-	for _, testCase := range testCases {
-		t.Run(testCase.name, func(t *testing.T) {
-			server, client := makeTestUtils(t)
+	logger := slog.New(slog.NewTextHandler(os.Stderr, nil))
 
-			runID := randutil.GenerateID()
-			zoneName := testCase.zoneNameFn(runID)
-			logger := slog.New(slog.NewTextHandler(os.Stderr, nil))
+	t.Run("success", func(t *testing.T) {
+		server, client := makeTestUtils(t)
 
-			key := "329ef10055b46b3cbc57"
+		o := &Solver{
+			logger:         logger,
+			hClientBuilder: MockHClientBuilder(client),
+		}
 
-			o := &Solver{
-				logger:         logger,
-				hClientBuilder: MockHClientBuilder(client),
-			}
+		ch := &v1alpha1.ChallengeRequest{
+			UID:               "61616bdf-44f1-4795-916d-4d1d05e7d1ad",
+			Action:            v1alpha1.ChallengeActionPresent,
+			Type:              "dns-01",
+			DNSName:           "example.org",
+			ResolvedFQDN:      "_acme-challenge.example.org.",
+			ResolvedZone:      "example.org.",
+			Key:               "329ef10055b46b3cbc57",
+			ResourceNamespace: "default",
+		}
 
-			ch := &v1alpha1.ChallengeRequest{
-				UID:               "61616bdf-44f1-4795-916d-4d1d05e7d1ad",
-				Action:            v1alpha1.ChallengeActionPresent,
-				Type:              "dns-01",
-				DNSName:           zoneName,
-				ResolvedFQDN:      fmt.Sprintf("_acme-challenge.%s.", zoneName),
-				ResolvedZone:      fmt.Sprintf("%s.", zoneName),
-				Key:               key,
-				ResourceNamespace: "default",
-			}
-
-			server.Expect([]mockutil.Request{
-				{
-					Method: "POST", Path: fmt.Sprintf("/zones/%s/rrsets/_acme-challenge/TXT/actions/add_records", zoneName),
-					Want: func(t *testing.T, r *http.Request) {
-						body, err := io.ReadAll(r.Body)
-						require.NoError(t, err)
-						assert.JSONEq(t,
-							fmt.Sprintf(`{"records": [{ "value": %q }], "ttl": 300}`, zoneutil.FormatTXTRecord(key)),
-							string(body),
-						)
-					},
-					Status: 201,
-					JSONRaw: `{
-						"action": {"id": 12, "status": "running"}
+		server.Expect([]mockutil.Request{
+			{
+				Method: "POST", Path: "/zones/example.org/rrsets/_acme-challenge/TXT/actions/add_records",
+				Want: func(t *testing.T, r *http.Request) {
+					body, err := io.ReadAll(r.Body)
+					require.NoError(t, err)
+					assert.JSONEq(t, `{
+						"records": [{ "value": "\"329ef10055b46b3cbc57\""}],
+						"ttl": 300
 					}`,
+						string(body),
+					)
 				},
-				{
-					Method: "GET", Path: "/actions?id=12&page=1&sort=status&sort=id",
-					Status: 200,
-					JSONRaw: `{
-						"actions": [{"id": 12, "status": "success"}]
-					}`,
-				},
-			})
-
-			err := o.Present(ch)
-			require.NoError(t, err)
+				Status: 201,
+				JSONRaw: `{
+					"action": {"id": 12, "status": "running"}
+				}`,
+			},
+			{
+				Method: "GET", Path: "/actions?id=12&page=1&sort=status&sort=id",
+				Status: 200,
+				JSONRaw: `{
+					"actions": [{"id": 12, "status": "success"}]
+				}`,
+			},
 		})
-	}
+		err := o.Present(ch)
+		require.NoError(t, err)
+	})
+
+	t.Run("idempotent", func(t *testing.T) {
+		server, client := makeTestUtils(t)
+
+		o := &Solver{
+			logger:         logger,
+			hClientBuilder: MockHClientBuilder(client),
+		}
+
+		ch := &v1alpha1.ChallengeRequest{
+			UID:               "61616bdf-44f1-4795-916d-4d1d05e7d1ad",
+			Action:            v1alpha1.ChallengeActionPresent,
+			Type:              "dns-01",
+			DNSName:           "example.org",
+			ResolvedFQDN:      "_acme-challenge.example.org.",
+			ResolvedZone:      "example.org.",
+			Key:               "329ef10055b46b3cbc57",
+			ResourceNamespace: "default",
+		}
+
+		server.Expect([]mockutil.Request{
+			{
+				Method: "POST", Path: "/zones/example.org/rrsets/_acme-challenge/TXT/actions/add_records",
+				Want: func(t *testing.T, r *http.Request) {
+					body, err := io.ReadAll(r.Body)
+					require.NoError(t, err)
+					assert.JSONEq(t, `{
+						"records": [{ "value": "\"329ef10055b46b3cbc57\""}],
+						"ttl": 300
+					}`,
+						string(body),
+					)
+				},
+				Status: 422,
+				JSONRaw: `{
+					"error": {
+						"code": "invalid_input",
+						"message": "duplicate value '\"329ef10055b46b3cbc57\"'",
+						"details": {
+							"fields": [
+								{
+									"messages": ["duplicate value '\"329ef10055b46b3cbc57\"'"],
+									"name": "records[0].records[1].value"
+								}
+							]
+						}
+					}
+				}`,
+			},
+		})
+		err := o.Present(ch)
+		require.NoError(t, err)
+	})
 }
 
 func TestCleanup(t *testing.T) {
