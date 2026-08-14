@@ -2,8 +2,10 @@ package hetzner
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"log/slog"
+	"strings"
 
 	"github.com/cert-manager/cert-manager/pkg/acme/webhook"
 	"github.com/cert-manager/cert-manager/pkg/acme/webhook/apis/acme/v1alpha1"
@@ -105,6 +107,11 @@ func (c *Solver) Present(ch *v1alpha1.ChallengeRequest) error {
 		},
 	)
 	if err != nil {
+		if herr, ok := errors.AsType[hcloud.Error](err); ok &&
+			herr.Code == hcloud.ErrorCodeInvalidInput &&
+			strings.Contains(herr.Message, "duplicate value") {
+			return nil
+		}
 		return c.stabilizeError(logger, "failed to request rrset record addition", err)
 	}
 
