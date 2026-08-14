@@ -1,5 +1,13 @@
 # Changelog
 
+## [v0.8.1](https://github.com/hetzner/cert-manager-webhook-hetzner/releases/tag/v0.8.1)
+
+[Compare to previous version](https://github.com/hetzner/cert-manager-webhook-hetzner/compare/v0.8.0...v0.8.1)
+
+### Bug Fixes
+
+- present idempotency by handling duplicate record value error (#214) ([71d5bcc](https://github.com/hetzner/cert-manager-webhook-hetzner/commit/71d5bcc9cbb6921e5aa7976596f5c671f9c35ddb))
+
 ## [v0.8.0](https://github.com/hetzner/cert-manager-webhook-hetzner/releases/tag/v0.8.0)
 
 ### Features
