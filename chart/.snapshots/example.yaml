@@ -7,7 +7,7 @@ metadata:
   namespace: "integrations"
   labels:
     app: cert-manager-webhook-hetzner
-    chart: cert-manager-webhook-hetzner-0.8.1 # x-releaser-pleaser-version
+    chart: cert-manager-webhook-hetzner-0.9.0 # x-releaser-pleaser-version
     release: snapshot
     heritage: Helm
 ---
@@ -18,7 +18,7 @@ metadata:
   name: snapshot-cert-manager-webhook-hetzner:read-secrets
   labels:
     app: cert-manager-webhook-hetzner
-    chart: cert-manager-webhook-hetzner-0.8.1 # x-releaser-pleaser-version
+    chart: cert-manager-webhook-hetzner-0.9.0 # x-releaser-pleaser-version
     release: snapshot
     heritage: Helm
 rules:
@@ -39,7 +39,7 @@ metadata:
   name: snapshot-cert-manager-webhook-hetzner:domain-solver
   labels:
     app: cert-manager-webhook-hetzner
-    chart: cert-manager-webhook-hetzner-0.8.1 # x-releaser-pleaser-version
+    chart: cert-manager-webhook-hetzner-0.9.0 # x-releaser-pleaser-version
     release: snapshot
     heritage: Helm
 rules:
@@ -57,7 +57,7 @@ metadata:
   name: snapshot-cert-manager-webhook-hetzner:read-secrets
   labels:
     app: cert-manager-webhook-hetzner
-    chart: cert-manager-webhook-hetzner-0.8.1 # x-releaser-pleaser-version
+    chart: cert-manager-webhook-hetzner-0.9.0 # x-releaser-pleaser-version
     release: snapshot
     heritage: Helm
 roleRef:
@@ -79,7 +79,7 @@ metadata:
   name: snapshot-cert-manager-webhook-hetzner:auth-delegator
   labels:
     app: cert-manager-webhook-hetzner
-    chart: cert-manager-webhook-hetzner-0.8.1 # x-releaser-pleaser-version
+    chart: cert-manager-webhook-hetzner-0.9.0 # x-releaser-pleaser-version
     release: snapshot
     heritage: Helm
 roleRef:
@@ -99,7 +99,7 @@ metadata:
   name: snapshot-cert-manager-webhook-hetzner:domain-solver
   labels:
     app: cert-manager-webhook-hetzner
-    chart: cert-manager-webhook-hetzner-0.8.1 # x-releaser-pleaser-version
+    chart: cert-manager-webhook-hetzner-0.9.0 # x-releaser-pleaser-version
     release: snapshot
     heritage: Helm
 roleRef:
@@ -123,7 +123,7 @@ metadata:
   namespace: kube-system
   labels:
     app: cert-manager-webhook-hetzner
-    chart: cert-manager-webhook-hetzner-0.8.1 # x-releaser-pleaser-version
+    chart: cert-manager-webhook-hetzner-0.9.0 # x-releaser-pleaser-version
     release: snapshot
     heritage: Helm
 roleRef:
@@ -144,7 +144,7 @@ metadata:
   namespace: "integrations"
   labels:
     app: cert-manager-webhook-hetzner
-    chart: cert-manager-webhook-hetzner-0.8.1 # x-releaser-pleaser-version
+    chart: cert-manager-webhook-hetzner-0.9.0 # x-releaser-pleaser-version
     release: snapshot
     heritage: Helm
 spec:
@@ -170,7 +170,7 @@ metadata:
   namespace: "integrations"
   labels:
     app: cert-manager-webhook-hetzner
-    chart: cert-manager-webhook-hetzner-0.8.1 # x-releaser-pleaser-version
+    chart: cert-manager-webhook-hetzner-0.9.0 # x-releaser-pleaser-version
     release: snapshot
     heritage: Helm
 spec:
@@ -196,7 +196,7 @@ spec:
       serviceAccountName: snapshot-cert-manager-webhook-hetzner
       containers:
         - name: cert-manager-webhook-hetzner
-          image: "docker.io/hetzner/cert-manager-webhook-hetzner:v0.8.1" # x-releaser-pleaser-version
+          image: "docker.io/hetzner/cert-manager-webhook-hetzner:v0.9.0" # x-releaser-pleaser-version
           imagePullPolicy: IfNotPresent
           args:
             - --tls-cert-file=/tls/tls.crt
@@ -258,7 +258,7 @@ metadata:
   name: v1alpha1.acme.hetzner.com
   labels:
     app: cert-manager-webhook-hetzner
-    chart: cert-manager-webhook-hetzner-0.8.1 # x-releaser-pleaser-version
+    chart: cert-manager-webhook-hetzner-0.9.0 # x-releaser-pleaser-version
     release: snapshot
     heritage: Helm
   annotations:
@@ -281,7 +281,7 @@ metadata:
   namespace: "integrations"
   labels:
     app: cert-manager-webhook-hetzner
-    chart: cert-manager-webhook-hetzner-0.8.1 # x-releaser-pleaser-version
+    chart: cert-manager-webhook-hetzner-0.9.0 # x-releaser-pleaser-version
     release: snapshot
     heritage: Helm
 spec:
@@ -301,7 +301,7 @@ metadata:
   namespace: "integrations"
   labels:
     app: cert-manager-webhook-hetzner
-    chart: cert-manager-webhook-hetzner-0.8.1 # x-releaser-pleaser-version
+    chart: cert-manager-webhook-hetzner-0.9.0 # x-releaser-pleaser-version
     release: snapshot
     heritage: Helm
 spec:
@@ -324,7 +324,7 @@ metadata:
   namespace: "integrations"
   labels:
     app: cert-manager-webhook-hetzner
-    chart: cert-manager-webhook-hetzner-0.8.1 # x-releaser-pleaser-version
+    chart: cert-manager-webhook-hetzner-0.9.0 # x-releaser-pleaser-version
     release: snapshot
     heritage: Helm
 spec:
@@ -339,7 +339,7 @@ metadata:
   namespace: "integrations"
   labels:
     app: cert-manager-webhook-hetzner
-    chart: cert-manager-webhook-hetzner-0.8.1 # x-releaser-pleaser-version
+    chart: cert-manager-webhook-hetzner-0.9.0 # x-releaser-pleaser-version
     release: snapshot
     heritage: Helm
 spec:
@@ -354,7 +354,7 @@ metadata:
   namespace: "integrations"
   labels:
     app: cert-manager-webhook-hetzner
-    chart: cert-manager-webhook-hetzner-0.8.1 # x-releaser-pleaser-version
+    chart: cert-manager-webhook-hetzner-0.9.0 # x-releaser-pleaser-version
     release: snapshot
     heritage: Helm
 spec:
