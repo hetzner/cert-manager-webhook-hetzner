@@ -1,5 +1,13 @@
 # Changelog
 
+## [v0.9.0](https://github.com/hetzner/cert-manager-webhook-hetzner/releases/tag/v0.9.0)
+
+[Compare to previous version](https://github.com/hetzner/cert-manager-webhook-hetzner/compare/v0.8.1...v0.9.0)
+
+### Features
+
+- **helm**: configurable probes and startup probe (#223) ([6934b5d](https://github.com/hetzner/cert-manager-webhook-hetzner/commit/6934b5d9cd35eb9c7bd29eb39e162dde48e52bf5))
+
 ## [v0.8.1](https://github.com/hetzner/cert-manager-webhook-hetzner/releases/tag/v0.8.1)
 
 [Compare to previous version](https://github.com/hetzner/cert-manager-webhook-hetzner/compare/v0.8.0...v0.8.1)
