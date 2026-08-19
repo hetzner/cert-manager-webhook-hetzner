@@ -20,6 +20,13 @@ metrics:
   serviceMonitor:
     enabled: true
 
+startupProbe:
+  periodSeconds: 5
+  failureThreshold: 30
+
+livenessProbe:
+  timeoutSeconds: 5
+
 resources:
   limits:
     cpu: 100m

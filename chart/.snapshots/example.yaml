@@ -212,16 +212,24 @@ spec:
             - name: metrics
               containerPort: 8080
               protocol: TCP
+          startupProbe:
+            failureThreshold: 30
+            httpGet:
+              path: /healthz
+              port: https
+              scheme: HTTPS
+            periodSeconds: 5
           livenessProbe:
             httpGet:
-              scheme: HTTPS
               path: /healthz
               port: https
+              scheme: HTTPS
+            timeoutSeconds: 5
           readinessProbe:
             httpGet:
-              scheme: HTTPS
               path: /healthz
               port: https
+              scheme: HTTPS
           volumeMounts:
             - name: certs
               mountPath: /tls

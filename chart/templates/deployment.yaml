@@ -71,16 +71,15 @@ spec:
             - name: metrics
               containerPort: 8080
               protocol: TCP
-          livenessProbe:
-            httpGet:
-              scheme: HTTPS
-              path: /healthz
-              port: https
-          readinessProbe:
-            httpGet:
-              scheme: HTTPS
-              path: /healthz
-              port: https
+          {{- with .Values.startupProbe }}
+          startupProbe: {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.livenessProbe }}
+          livenessProbe: {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.readinessProbe }}
+          readinessProbe: {{- toYaml . | nindent 12 }}
+          {{- end }}
           volumeMounts:
             - name: certs
               mountPath: /tls
