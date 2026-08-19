@@ -49,6 +49,33 @@ metrics:
 # -- Number of replicas.
 replicaCount: 1
 
+# -- [Kubernetes startup probe](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/).
+# Set to `null` to disable the startup probe.
+# @default -- See [values.yaml](values.yaml)
+startupProbe:
+  httpGet:
+    scheme: HTTPS
+    path: /healthz
+    port: https
+
+# -- [Kubernetes liveness probe](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/).
+# Set to `null` to disable the liveness probe.
+# @default -- See [values.yaml](values.yaml)
+livenessProbe:
+  httpGet:
+    scheme: HTTPS
+    path: /healthz
+    port: https
+
+# -- [Kubernetes readiness probe](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/).
+# Set to `null` to disable the readiness probe.
+# @default -- See [values.yaml](values.yaml)
+readinessProbe:
+  httpGet:
+    scheme: HTTPS
+    path: /healthz
+    port: https
+
 # -- [Kubernetes resource management](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/) for the webhook
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
