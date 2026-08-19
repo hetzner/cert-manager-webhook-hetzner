@@ -49,8 +49,7 @@ metrics:
 # -- Number of replicas.
 replicaCount: 1
 
-# -- Kubernetes startup probe
-# See https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
+# -- [Kubernetes startup probe](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/).
 # Set to `null` to disable the startup probe.
 # @default -- See [values.yaml](values.yaml)
 startupProbe:
@@ -59,8 +58,7 @@ startupProbe:
     path: /healthz
     port: https
 
-# -- Kubernetes liveness probe
-# See https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
+# -- [Kubernetes liveness probe](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/).
 # Set to `null` to disable the liveness probe.
 # @default -- See [values.yaml](values.yaml)
 livenessProbe:
@@ -69,8 +67,7 @@ livenessProbe:
     path: /healthz
     port: https
 
-# -- Kubernetes readiness probe
-# See https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
+# -- [Kubernetes readiness probe](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/).
 # Set to `null` to disable the readiness probe.
 # @default -- See [values.yaml](values.yaml)
 readinessProbe:

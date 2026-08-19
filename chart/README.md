@@ -21,7 +21,7 @@ cert-manager ACME webhook for Hetzner
 | image.tag | string | Current version | Tag of the webhook image. |
 | imagePullSecrets | list | `[]` | Additional image pull secrets in the [standard Kubernetes format](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/) |
 | labels | object | `{}` | [Kubernetes labels](https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/) added to the deployment metadata |
-| livenessProbe | object | See [values.yaml](values.yaml) | Kubernetes liveness probe See https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/ Set to `null` to disable the liveness probe. |
+| livenessProbe | object | See [values.yaml](values.yaml) | [Kubernetes liveness probe](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/). Set to `null` to disable the liveness probe. |
 | metrics.serviceMonitor.enabled | bool | `false` | Deploys a ServiceMonitor to scrape the metrics. **Requires** the ServiceMonitor CRD. |
 | nameOverride | string | `""` | Override the name of the chart. |
 | nodeSelector | object | `{}` | [Kubernetes node selector](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#nodeselector) for the webhook. |
@@ -30,11 +30,11 @@ cert-manager ACME webhook for Hetzner
 | podLabels | object | `{}` | [Kubernetes labels](https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/) added to the pod metadata |
 | podSecurityContext | object | [Restricted](https://kubernetes.io/docs/concepts/security/pod-security-standards/#restricted) | [Kubernetes pod security context](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod) for the webhook. |
 | priorityClassName | string | `""` | PriorityClassName of the application pods |
-| readinessProbe | object | See [values.yaml](values.yaml) | Kubernetes readiness probe See https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/ Set to `null` to disable the readiness probe. |
+| readinessProbe | object | See [values.yaml](values.yaml) | [Kubernetes readiness probe](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/). Set to `null` to disable the readiness probe. |
 | replicaCount | int | `1` | Number of replicas. |
 | resources | object | `{}` | [Kubernetes resource management](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/) for the webhook |
 | service.port | int | `443` | Port of the webhook service. |
 | service.type | string | `"ClusterIP"` | Kubernetes service type of the webhook service. |
-| startupProbe | object | See [values.yaml](values.yaml) | Kubernetes startup probe See https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/ Set to `null` to disable the startup probe. |
+| startupProbe | object | See [values.yaml](values.yaml) | [Kubernetes startup probe](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/). Set to `null` to disable the startup probe. |
 | strategy | object | `{"type":"RollingUpdate"}` | [Kubernetes deployment strategy](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#strategy) for the deployment. |
 | tolerations | list | `[]` | [Kubernetes tolerations](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration) for the webhook. |
