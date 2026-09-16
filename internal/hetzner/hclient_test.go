@@ -3,13 +3,17 @@ package hetzner
 import (
 	"context"
 	"io/fs"
+	"net/http"
+	"net/http/httptest"
 	"os"
 	"path/filepath"
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/testutil"
+	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -138,5 +142,84 @@ hcloud_api_requests_total{api_endpoint="/locations",code="401",method="get"} 1
 		builder := NewHClientBuilder(fake.NewClientset(), prometheus.NewRegistry())
 		_, err := builder(t.Context(), "default", config)
 		require.EqualError(t, err, "hetzner token provided in both tokenSecretKeyRef and tokenFilePath")
+	})
+
+	t.Run("InvalidHTTPTimeout", func(t *testing.T) {
+		config := Config{
+			HetznerTokenFilePath: writeTestToken(t),
+			HTTPTimeout:          "not-a-duration",
+		}
+
+		builder := NewHClientBuilder(fake.NewClientset(), prometheus.NewRegistry())
+		_, err := builder(t.Context(), "default", config)
+		require.ErrorContains(t, err, "error parsing httpTimeout")
+	})
+
+	t.Run("CustomHTTPTimeoutIsAppliedToClient", func(t *testing.T) {
+		// A server that responds slower than the configured timeout allows. The call
+		// context is bounded well below the SDK's first retry backoff (1s), so a
+		// correctly-applied short timeout fails fast within that bound; if the
+		// configured value were ignored in favor of the (much larger) default, the
+		// request would still be in flight when the context deadline cuts it off with
+		// a different error instead.
+		server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+			time.Sleep(50 * time.Millisecond)
+			w.WriteHeader(http.StatusOK)
+			_, _ = w.Write([]byte(`{}`))
+		}))
+		t.Cleanup(server.Close)
+
+		config := Config{
+			HetznerTokenFilePath: writeTestToken(t),
+			HCloudEndpoint:       server.URL,
+			HTTPTimeout:          "10ms",
+		}
+
+		builder := NewHClientBuilder(fake.NewClientset(), prometheus.NewRegistry())
+		client, err := builder(t.Context(), "default", config)
+		require.NoError(t, err)
+
+		ctx, cancel := context.WithTimeout(t.Context(), 200*time.Millisecond)
+		defer cancel()
+
+		_, err = client.Location.All(ctx)
+		require.ErrorContains(t, err, "Client.Timeout")
+	})
+}
+
+func writeTestToken(t *testing.T) string {
+	t.Helper()
+
+	tokenPath := filepath.Join(t.TempDir(), "token")
+	require.NoError(t, os.WriteFile(tokenPath, []byte("test-token"), 0o600))
+	return tokenPath
+}
+
+func TestResolveHTTPTimeout(t *testing.T) {
+	t.Run("Empty falls back to default", func(t *testing.T) {
+		d, err := resolveHTTPTimeout("")
+		require.NoError(t, err)
+		assert.Equal(t, DefaultHTTPTimeout, d)
+	})
+
+	t.Run("Valid duration is parsed", func(t *testing.T) {
+		d, err := resolveHTTPTimeout("45s")
+		require.NoError(t, err)
+		assert.Equal(t, 45*time.Second, d)
+	})
+
+	t.Run("Invalid duration returns an error", func(t *testing.T) {
+		_, err := resolveHTTPTimeout("not-a-duration")
+		require.ErrorContains(t, err, "error parsing httpTimeout")
+	})
+
+	t.Run("Zero duration is rejected", func(t *testing.T) {
+		_, err := resolveHTTPTimeout("0s")
+		require.ErrorContains(t, err, "httpTimeout must be positive")
+	})
+
+	t.Run("Negative duration is rejected", func(t *testing.T) {
+		_, err := resolveHTTPTimeout("-5s")
+		require.ErrorContains(t, err, "httpTimeout must be positive")
 	})
 }
