@@ -24,7 +24,8 @@ func TestLoadConfig(t *testing.T) {
 				"tokenSecretKeyRef": {
 					"name": "hetzner",
 					"key": "token"
-				}
+				},
+				"httpTimeout": "45s"
 			}`,
 			want: Config{
 				HetznerTokenSecret: SecretKeyRef{
@@ -33,6 +34,7 @@ func TestLoadConfig(t *testing.T) {
 				},
 				HetznerTokenFilePath: "/tmp/hetzner",
 				HCloudEndpoint:       "https://changed.com/v2",
+				HTTPTimeout:          "45s",
 			},
 		},
 		{

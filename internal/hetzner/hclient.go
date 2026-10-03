@@ -17,6 +17,30 @@ import (
 	"github.com/hetznercloud/hcloud-go/v2/hcloud"
 )
 
+// DefaultHTTPTimeout is the per-request timeout used when [Config.HTTPTimeout] is not
+// set. Kept short enough that the SDK's built-in retry loop (5 retries, exponential
+// backoff) stays comfortably bounded, so a genuinely unreachable API still fails with a
+// clear timeout error instead of running into an outer deadline first.
+const DefaultHTTPTimeout = 15 * time.Second
+
+// resolveHTTPTimeout parses [Config.HTTPTimeout], falling back to [DefaultHTTPTimeout]
+// when it is empty. A zero or negative duration is rejected, since [http.Client]
+// treats that as "no timeout" rather than "immediate timeout".
+func resolveHTTPTimeout(raw string) (time.Duration, error) {
+	if raw == "" {
+		return DefaultHTTPTimeout, nil
+	}
+
+	d, err := time.ParseDuration(raw)
+	if err != nil {
+		return 0, fmt.Errorf("error parsing httpTimeout: %w", err)
+	}
+	if d <= 0 {
+		return 0, fmt.Errorf("httpTimeout must be positive, got %s", d)
+	}
+	return d, nil
+}
+
 // HClientBuilderFunc is a function that builds a [hcloud.Client] from a secret stored in kubernetes.
 type HClientBuilderFunc func(
 	ctx context.Context,
@@ -56,11 +80,16 @@ func NewHClientBuilder(kubeClient kubernetes.Interface, registry prometheus.Regi
 			return nil, errors.New("hetzner token is empty")
 		}
 
+		httpTimeout, err := resolveHTTPTimeout(config.HTTPTimeout)
+		if err != nil {
+			return nil, err
+		}
+
 		clientOpts := []hcloud.ClientOption{
 			hcloud.WithToken(string(token)),
 			hcloud.WithInstrumentation(registry),
 			hcloud.WithApplication("cert-manager-webhook-hetzner", version.Version),
-			hcloud.WithHTTPClient(&http.Client{Timeout: 15 * time.Second}),
+			hcloud.WithHTTPClient(&http.Client{Timeout: httpTimeout}),
 		}
 		if config.HCloudEndpoint != "" {
 			clientOpts = append(clientOpts, hcloud.WithEndpoint(config.HCloudEndpoint))
