@@ -1,5 +1,13 @@
 # Changelog
 
+## [v0.9.1](https://github.com/hetzner/cert-manager-webhook-hetzner/releases/tag/v0.9.1)
+
+[Compare to previous version](https://github.com/hetzner/cert-manager-webhook-hetzner/compare/v0.9.0...v0.9.1)
+
+### Bug Fixes
+
+- update Go to mitigate CVE-2026-111943 (#258) ([21bfc6e](https://github.com/hetzner/cert-manager-webhook-hetzner/commit/21bfc6eac55c1478c7216ca5bab3e73437489b78))
+
 ## [v0.9.0](https://github.com/hetzner/cert-manager-webhook-hetzner/releases/tag/v0.9.0)
 
 [Compare to previous version](https://github.com/hetzner/cert-manager-webhook-hetzner/compare/v0.8.1...v0.9.0)
