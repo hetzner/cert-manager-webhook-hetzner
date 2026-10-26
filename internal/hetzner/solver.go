@@ -103,7 +103,7 @@ func (c *Solver) Present(ch *v1alpha1.ChallengeRequest) error {
 		zoneRRSet,
 		hcloud.ZoneRRSetAddRecordsOpts{
 			Records: []hcloud.ZoneRRSetRecord{{Value: zoneutil.FormatTXTRecord(ch.Key)}},
-			TTL:     hcloud.Ptr(TTL),
+			TTL:     new(TTL),
 		},
 	)
 	if err != nil {
