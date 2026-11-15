@@ -2,7 +2,7 @@ module github.com/hetzner/cert-manager-webhook-hetzner
 
 go 1.26.10
 
-toolchain go1.27.3
+toolchain go1.27.4
 
 require (
 	github.com/cert-manager/cert-manager v1.21.3
