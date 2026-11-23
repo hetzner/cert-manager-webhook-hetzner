@@ -16,6 +16,11 @@ type Config struct {
 	HetznerTokenSecret   SecretKeyRef `json:"tokenSecretKeyRef"`
 	HetznerTokenFilePath string       `json:"tokenFilePath"`
 	HCloudEndpoint       string       `json:"hcloudEndpoint"`
+
+	// HTTPTimeout overrides the default per-request timeout used for calls to the
+	// Hetzner Cloud API, e.g. "45s". Must be a positive duration parseable by
+	// [time.ParseDuration]. Falls back to [DefaultHTTPTimeout] when empty.
+	HTTPTimeout string `json:"httpTimeout"`
 }
 
 type SecretKeyRef struct {
